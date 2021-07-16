@@ -37,7 +37,12 @@ public class ExtensionLoader<T> {
     /**
      * 扩展类配置列表缓存 {type: {name, 扩展类}}
      */
-    private final Map<Class<?>, Map<String, Class<?>>> extensionClassesCache = new ConcurrentHashMap<>();
+    private final Holder<Map<String, Class<?>>> extensionClassesCache = new Holder<>();
+
+    /**
+     * 创建扩展实例类的锁缓存 {name: synchronized 持有的锁}
+     */
+    private final Map<String, Object> createExtensionLockMap = new ConcurrentHashMap<>();
 
     /**
      * 扩展类加载器的类型
@@ -48,6 +53,11 @@ public class ExtensionLoader<T> {
      * 扩展类存放的目录地址
      */
     private static final String EXTENSION_PATH = "META-INF/ccx-rpc/";
+
+    /**
+     * 默认扩展名缓存
+     */
+    private static String defaultNameCache;
 
     /**
      * @param type 扩展类加载器的类型
@@ -67,11 +77,15 @@ public class ExtensionLoader<T> {
         if (!type.isInterface()) {
             throw new IllegalStateException(type.getName() + " is not interface");
         }
+        SPI annotation = type.getAnnotation(SPI.class);
+        if (annotation == null) {
+            throw new IllegalStateException(type.getName() + " has not @SPI annotation.");
+        }
+        defaultNameCache = annotation.value();
         ExtensionLoader<?> extensionLoader = extensionLoaderCache.get(type);
         if (extensionLoader != null) {
             return extensionLoader;
         }
-        // TODO 线程安全
         extensionLoader = new ExtensionLoader<>(type);
         extensionLoaderCache.putIfAbsent(type, extensionLoader);
         return extensionLoader;
@@ -83,33 +97,34 @@ public class ExtensionLoader<T> {
      * @return 返回该类的注解 @SPI.value 指定的类实例
      */
     public T getDefaultExtension() {
-        SPI annotation = type.getAnnotation(SPI.class);
-        if (annotation == null) {
-            throw new IllegalStateException(type.getName() + " has not @SPI annotation.");
-        }
-        return getExtension(annotation.value());
+        return getExtension(defaultNameCache);
     }
 
     /**
-     * 根据名字获取扩展类实例
+     * 根据名字获取扩展类实例(单例)
      *
      * @param name 扩展类在配置文件中配置的名字
-     * @return 扩展类实例，如果找不到，则抛出异常
+     * @return 单例扩展类实例，如果找不到，则抛出异常
      */
     public T getExtension(String name) {
-        // 从缓存中获取
+        // 从缓存中获取单例
         T extension = extensionsCache.get(name);
-        if (extension != null) {
-            return extension;
+        if (extension == null) {
+            Object lock = createExtensionLockMap.computeIfAbsent(name, k -> new Object());
+            //noinspection SynchronizationOnLocalVariableOrMethodParameter
+            synchronized (lock) {
+                extension = extensionsCache.get(name);
+                if (extension == null) {
+                    extension = createExtension(name);
+                    extensionsCache.put(name, extension);
+                }
+            }
         }
-        extension = createExtension(name);
-        extensionsCache.putIfAbsent(name, extension);
         return extension;
     }
 
     /**
      * 创建对应名字的扩展类实例
-     * TODO 添加缓存
      *
      * @param name 扩展名
      * @return 扩展类实例
@@ -119,15 +134,14 @@ public class ExtensionLoader<T> {
         Map<String, Class<?>> extensionClasses = getAllExtensionClasses();
         // 再根据名字找到对应的扩展类
         Class<?> clazz = extensionClasses.get(name);
-        IllegalStateException notFoundEx = new IllegalStateException("Extension not found. name=" + name + ", type=" + type.getName());
         if (clazz == null) {
-            throw notFoundEx;
+            throw new IllegalStateException("Extension not found. name=" + name + ", type=" + type.getName());
         }
         try {
             //noinspection unchecked
             return (T) clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw notFoundEx;
+            throw new IllegalStateException("Extension not found. name=" + name + ", type=" + type.getName());
         }
     }
 
@@ -137,13 +151,17 @@ public class ExtensionLoader<T> {
      * @return {name: clazz}
      */
     private Map<String, Class<?>> getAllExtensionClasses() {
-        // TODO 线程安全
-        Map<String, Class<?>> extensionClasses = extensionClassesCache.get(type);
+        Map<String, Class<?>> extensionClasses = extensionClassesCache.get();
         if (extensionClasses != null) {
             return extensionClasses;
         }
-        extensionClasses = loadClassesFromResources();
-        extensionClassesCache.putIfAbsent(type, extensionClasses);
+        synchronized (extensionClassesCache) {
+            extensionClasses = extensionClassesCache.get();
+            if (extensionClasses == null) {
+                extensionClasses = loadClassesFromResources();
+                extensionClassesCache.set(extensionClasses);
+            }
+        }
         return extensionClasses;
     }
 
@@ -182,9 +200,9 @@ public class ExtensionLoader<T> {
     /**
      * 解析行，并且把解析到的类，放到 extensionClasses 中
      *
-     * @param line
-     * @param extensionClasses
-     * @throws ClassNotFoundException
+     * @param line             行
+     * @param extensionClasses 扩展类列表
+     * @throws ClassNotFoundException 找不到类
      */
     private void parseLine(String line, Map<String, Class<?>> extensionClasses) throws ClassNotFoundException {
         line = line.trim();
