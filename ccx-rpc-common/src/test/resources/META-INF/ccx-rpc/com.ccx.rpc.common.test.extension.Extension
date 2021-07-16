@@ -1,0 +1,2 @@
+default=com.ccx.rpc.common.test.extension.DefaultExtension
+other=com.ccx.rpc.common.test.extension.OtherExtension

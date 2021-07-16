@@ -32,7 +32,7 @@ public class ExtensionLoader<T> {
     /**
      * 扩展加载器实例缓存 {类型：加载器实例}
      */
-    private final Map<Class<?>, ExtensionLoader<?>> extensionLoaderCache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, ExtensionLoader<?>> extensionLoaderCache = new ConcurrentHashMap<>();
 
     /**
      * 扩展类配置列表缓存 {type: {name, 扩展类}}
@@ -47,7 +47,7 @@ public class ExtensionLoader<T> {
     /**
      * 扩展类存放的目录地址
      */
-    private static final String EXTENSION_PATH = "META-INF/extensions/ccx-rpc";
+    private static final String EXTENSION_PATH = "META-INF/ccx-rpc/";
 
     /**
      * @param type 扩展类加载器的类型
@@ -62,7 +62,11 @@ public class ExtensionLoader<T> {
      * @param type 扩展类加载器的类型
      * @return 扩展类加载器实例
      */
-    public ExtensionLoader<?> getExtensionLoader(Class<?> type) {
+    public static ExtensionLoader<?> getExtensionLoader(Class<?> type) {
+        // 扩展类型必须是接口
+        if (!type.isInterface()) {
+            throw new IllegalStateException(type.getName() + " is not interface");
+        }
         ExtensionLoader<?> extensionLoader = extensionLoaderCache.get(type);
         if (extensionLoader != null) {
             return extensionLoader;
@@ -71,6 +75,19 @@ public class ExtensionLoader<T> {
         extensionLoader = new ExtensionLoader<>(type);
         extensionLoaderCache.putIfAbsent(type, extensionLoader);
         return extensionLoader;
+    }
+
+    /**
+     * 获取默认的扩展类实例，会自动加载 @SPI 注解中的 value 指定的类实例
+     *
+     * @return 返回该类的注解 @SPI.value 指定的类实例
+     */
+    public T getDefaultExtension() {
+        SPI annotation = type.getAnnotation(SPI.class);
+        if (annotation == null) {
+            throw new IllegalStateException(type.getName() + " has not @SPI annotation.");
+        }
+        return getExtension(annotation.value());
     }
 
     /**
