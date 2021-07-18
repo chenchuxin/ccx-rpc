@@ -72,7 +72,7 @@ public class ExtensionLoader<T> {
      * @param type 扩展类加载器的类型
      * @return 扩展类加载器实例
      */
-    public static ExtensionLoader<?> getExtensionLoader(Class<?> type) {
+    public static <S> ExtensionLoader<S> getExtensionLoader(Class<S> type) {
         // 扩展类型必须是接口
         if (!type.isInterface()) {
             throw new IllegalStateException(type.getName() + " is not interface");
@@ -84,11 +84,13 @@ public class ExtensionLoader<T> {
         defaultNameCache = annotation.value();
         ExtensionLoader<?> extensionLoader = extensionLoaderCache.get(type);
         if (extensionLoader != null) {
-            return extensionLoader;
+            //noinspection unchecked
+            return (ExtensionLoader<S>) extensionLoader;
         }
         extensionLoader = new ExtensionLoader<>(type);
         extensionLoaderCache.putIfAbsent(type, extensionLoader);
-        return extensionLoader;
+        //noinspection unchecked
+        return (ExtensionLoader<S>) extensionLoader;
     }
 
     /**
@@ -141,7 +143,7 @@ public class ExtensionLoader<T> {
             //noinspection unchecked
             return (T) clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException("Extension not found. name=" + name + ", type=" + type.getName());
+            throw new IllegalStateException("Extension not found. name=" + name + ", type=" + type.getName() + ". " + e.toString());
         }
     }
 
@@ -192,7 +194,7 @@ public class ExtensionLoader<T> {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new IllegalStateException("Parse file fail." + e.getMessage());
+            throw new IllegalStateException("Parse file fail. " + e.toString());
         }
         return extensionClasses;
     }
