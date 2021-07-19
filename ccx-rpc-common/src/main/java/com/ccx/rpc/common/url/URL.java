@@ -103,4 +103,8 @@ public class URL {
         }
         return fullString = URLParser.parseToStr(this, true, true);
     }
+
+    public static URL valueOf(String url) {
+        return URLParser.toURL(url);
+    }
 }

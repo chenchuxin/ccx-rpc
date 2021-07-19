@@ -3,6 +3,8 @@ package com.ccx.rpc.common.extension;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -123,6 +125,18 @@ public class ExtensionLoader<T> {
             }
         }
         return extension;
+    }
+
+    /**
+     * 获取自适应扩展类
+     *
+     * @return 动态代理自适应类
+     */
+    public T getAdaptiveExtension() {
+        InvocationHandler handler = new AdaptiveInvocationHandler<T>(type);
+        //noinspection unchecked
+        return (T) Proxy.newProxyInstance(ExtensionLoader.class.getClassLoader(),
+                new Class<?>[]{type}, handler);
     }
 
     /**
