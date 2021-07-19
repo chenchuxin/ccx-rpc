@@ -6,7 +6,7 @@
 
     <groupId>com.ccx</groupId>
     <artifactId>ccx-rpc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${project.version}</version>
     <modules>
         <module>ccx-rpc-core</module>
         <module>ccx-rpc-common</module>
@@ -17,6 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.version>1.0-SNAPSHOT</project.version>
         <junit.version>4.13.2</junit.version>
         <curator.version>5.1.0</curator.version>
         <lombok.version>1.18.12</lombok.version>
@@ -25,6 +26,16 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.ccx</groupId>
+                <artifactId>ccx-rpc-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ccx</groupId>
+                <artifactId>ccx-rpc-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

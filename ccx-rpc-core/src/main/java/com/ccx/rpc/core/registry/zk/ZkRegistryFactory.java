@@ -1,7 +1,7 @@
-package com.ccx.rpc.common.registry.zk;
+package com.ccx.rpc.core.registry.zk;
 
-import com.ccx.rpc.common.registry.Registry;
-import com.ccx.rpc.common.registry.RegistryFactory;
+import com.ccx.rpc.core.registry.Registry;
+import com.ccx.rpc.core.registry.RegistryFactory;
 import com.ccx.rpc.common.url.URL;
 
 /**

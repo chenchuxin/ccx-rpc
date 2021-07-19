@@ -1,9 +1,9 @@
-package com.ccx.rpc.common.test.registry;
+package com.ccx.rpc.core.test.registry;
 
 import cn.hutool.core.net.NetUtil;
 import com.ccx.rpc.common.extension.ExtensionLoader;
-import com.ccx.rpc.common.registry.Registry;
-import com.ccx.rpc.common.registry.RegistryFactory;
+import com.ccx.rpc.core.registry.Registry;
+import com.ccx.rpc.core.registry.RegistryFactory;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.url.URLParser;
 import org.apache.curator.test.TestingServer;
@@ -26,8 +26,8 @@ public class ZkRegistryTest {
 
     private TestingServer zkServer;
 
-    private final URL serviceUrl = URLParser.toURL("zk://host:123/com.ccx.rpc.common.test.registry.ZkRegistryTest?notify=false&methods=test1,test2");
-    private final URL serviceUrl2 = URLParser.toURL("zk://host2:123/com.ccx.rpc.common.test.registry.ZkRegistryTest?notify=false&methods=test1,test2");
+    private final URL serviceUrl = URLParser.toURL("zk://host:123/com.ccx.rpc.core.test.registry.ZkRegistryTest?notify=false&methods=test1,test2");
+    private final URL serviceUrl2 = URLParser.toURL("zk://host2:123/com.ccx.rpc.core.test.registry.ZkRegistryTest?notify=false&methods=test1,test2");
 
 
     @Before

@@ -1,0 +1,2 @@
+zk=com.ccx.rpc.core.registry.zk.ZkRegistryFactory
+local=com.ccx.rpc.core.registry.local.LocalRegistryFactory

@@ -1,10 +1,10 @@
-package com.ccx.rpc.common.registry.zk;
+package com.ccx.rpc.core.registry.zk;
 
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLEncoder;
 import com.ccx.rpc.common.consts.RegistryConst;
 import com.ccx.rpc.common.consts.URLParamKeyConst;
-import com.ccx.rpc.common.registry.Registry;
+import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.url.URLParser;
 

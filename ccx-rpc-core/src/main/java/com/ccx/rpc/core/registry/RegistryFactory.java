@@ -1,4 +1,4 @@
-package com.ccx.rpc.common.registry;
+package com.ccx.rpc.core.registry;
 
 import com.ccx.rpc.common.extension.SPI;
 import com.ccx.rpc.common.url.URL;

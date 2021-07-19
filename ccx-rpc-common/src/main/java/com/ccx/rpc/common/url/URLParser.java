@@ -1,10 +1,7 @@
 package com.ccx.rpc.common.url;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import java.util.*;
 
 import static com.ccx.rpc.common.consts.URLParamKeyConst.DEFAULT_KEY_PREFIX;
@@ -26,26 +23,26 @@ public class URLParser {
      */
     public static String parseToStr(URL url, boolean appendUser, boolean appendParameter, String... parameters) {
         StringBuilder buf = new StringBuilder();
-        if (StringUtils.isNotEmpty(url.getProtocol())) {
+        if (StrUtil.isNotEmpty(url.getProtocol())) {
             buf.append(url.getProtocol());
             buf.append("://");
         }
-        if (appendUser && StringUtils.isNotEmpty(url.getUsername())) {
+        if (appendUser && StrUtil.isNotEmpty(url.getUsername())) {
             buf.append(url.getUsername());
-            if (StringUtils.isNotEmpty(url.getPassword())) {
+            if (StrUtil.isNotEmpty(url.getPassword())) {
                 buf.append(":");
                 buf.append(url.getPassword());
             }
             buf.append("@");
         }
-        if (StringUtils.isNotEmpty(url.getHost())) {
+        if (StrUtil.isNotEmpty(url.getHost())) {
             buf.append(url.getHost());
             if (url.getPort() > 0) {
                 buf.append(":");
                 buf.append(url.getPort());
             }
         }
-        if (StringUtils.isNotEmpty(url.getPath())) {
+        if (StrUtil.isNotEmpty(url.getPath())) {
             buf.append("/");
             buf.append(url.getPath());
         }
@@ -57,10 +54,10 @@ public class URLParser {
     }
 
     private static void buildParameters(URL url, StringBuilder buf, String[] parameters) {
-        List<String> includes = (ArrayUtils.isEmpty(parameters) ? null : Arrays.asList(parameters));
+        List<String> includes = (ArrayUtil.isEmpty(parameters) ? null : Arrays.asList(parameters));
         boolean first = true;
         for (Map.Entry<String, String> entry : new TreeMap<>(url.getParams()).entrySet()) {
-            if (StringUtils.isNotEmpty(entry.getKey())
+            if (StrUtil.isNotEmpty(entry.getKey())
                     && (includes == null || includes.contains(entry.getKey()))) {
                 if (first) {
                     buf.append("?");
@@ -152,8 +149,6 @@ public class URLParser {
         }
         i = url.lastIndexOf(':');
         if (i >= 0 && i < url.length() - 1) {
-            port = Integer.parseInt(url.substring(i + 1));
-            url = url.substring(0, i);
             //noinspection StatementWithEmptyBody
             if (url.lastIndexOf('%') > i) {
                 // ipv6 address with scope id
