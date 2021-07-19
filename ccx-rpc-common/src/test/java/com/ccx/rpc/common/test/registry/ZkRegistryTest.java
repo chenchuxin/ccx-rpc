@@ -1,11 +1,11 @@
 package com.ccx.rpc.common.test.registry;
 
+import cn.hutool.core.net.NetUtil;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.common.registry.Registry;
 import com.ccx.rpc.common.registry.RegistryFactory;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.url.URLParser;
-import com.ccx.rpc.common.utils.NetUtils;
 import org.apache.curator.test.TestingServer;
 import org.junit.After;
 import org.junit.Assert;
@@ -33,7 +33,7 @@ public class ZkRegistryTest {
     @Before
     public void setup() throws Exception {
         // 获取随机端口，绑定测试用的 zk 服务端
-        int port = NetUtils.getAvailablePort();
+        int port = NetUtil.getUsableLocalPort();
         zkServer = new TestingServer(port, true);
         zkServer.start();
         URL url = URLParser.toURL("zk://localhost:" + port);
