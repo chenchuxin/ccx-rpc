@@ -1,5 +1,7 @@
 package com.ccx.rpc.common.extension;
 
+import com.ccx.rpc.common.consts.URLParamKeyConst;
+
 import java.lang.annotation.*;
 
 /**
@@ -15,7 +17,7 @@ public @interface SPI {
     /**
      * 默认扩展类全路径
      *
-     * @return
+     * @return 默认不填是 default
      */
-    String value();
+    String value() default URLParamKeyConst.DEFAULT;
 }

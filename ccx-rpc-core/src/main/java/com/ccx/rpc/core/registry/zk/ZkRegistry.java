@@ -51,7 +51,7 @@ public class ZkRegistry implements Registry {
     }
 
     private String toServicePath(URL url, boolean isProvider) {
-        return url.getParam(URLParamKeyConst.INTERFACE_KEY, url.getPath())
+        return url.getParam(URLParamKeyConst.INTERFACE, url.getPath())
                 + "/" + (isProvider ? RegistryConst.PROVIDERS_CATEGORY : RegistryConst.CONSUMERS_CATEGORY);
     }
 

@@ -7,12 +7,14 @@ package com.ccx.rpc.common.consts;
  * @date 2021/7/18
  */
 public interface URLParamKeyConst {
+
     String TIMEOUT = "timeout";
 
-    String DEFAULT_KEY_PREFIX = "default.";
+    String DEFAULT_PREFIX = "default.";
 
-    String DEFAULT_KEY = "default";
+    String DEFAULT = "default";
 
-    String INTERFACE_KEY = "interface";
+    String INTERFACE = "interface";
 
+    String PROTOCOL = "protocol";
 }

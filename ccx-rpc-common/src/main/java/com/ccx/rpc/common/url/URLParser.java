@@ -4,7 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import java.util.*;
 
-import static com.ccx.rpc.common.consts.URLParamKeyConst.DEFAULT_KEY_PREFIX;
+import static com.ccx.rpc.common.consts.URLParamKeyConst.DEFAULT_PREFIX;
 
 /**
  * @author chenchuxin
@@ -103,8 +103,8 @@ public class URLParser {
                         String value = part.substring(j + 1);
                         parameters.put(key, value);
                         // compatible with lower versions registering "default." keys
-                        if (key.startsWith(DEFAULT_KEY_PREFIX)) {
-                            parameters.putIfAbsent(key.substring(DEFAULT_KEY_PREFIX.length()), value);
+                        if (key.startsWith(DEFAULT_PREFIX)) {
+                            parameters.putIfAbsent(key.substring(DEFAULT_PREFIX.length()), value);
                         }
                     } else {
                         parameters.put(part, part);

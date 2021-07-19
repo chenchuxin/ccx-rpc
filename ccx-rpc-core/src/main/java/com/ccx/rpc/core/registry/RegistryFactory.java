@@ -1,5 +1,7 @@
 package com.ccx.rpc.core.registry;
 
+import com.ccx.rpc.common.consts.URLParamKeyConst;
+import com.ccx.rpc.common.extension.Adaptive;
 import com.ccx.rpc.common.extension.SPI;
 import com.ccx.rpc.common.url.URL;
 
@@ -9,8 +11,9 @@ import com.ccx.rpc.common.url.URL;
  * @author chenchuxin
  * @date 2021/7/18
  */
-@SPI("zk")
+@SPI
 public interface RegistryFactory {
 
+    @Adaptive(URLParamKeyConst.PROTOCOL)
     Registry getRegistry(URL url);
 }
