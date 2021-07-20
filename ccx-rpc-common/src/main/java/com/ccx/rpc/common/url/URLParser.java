@@ -4,7 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import java.util.*;
 
-import static com.ccx.rpc.common.consts.URLParamKeyConst.DEFAULT_PREFIX;
+import static com.ccx.rpc.common.consts.URLKeyConst.DEFAULT_PREFIX;
 
 /**
  * @author chenchuxin

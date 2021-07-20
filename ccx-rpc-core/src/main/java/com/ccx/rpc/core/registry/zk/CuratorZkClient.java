@@ -1,7 +1,7 @@
 package com.ccx.rpc.core.registry.zk;
 
 import com.ccx.rpc.common.url.URL;
-import com.ccx.rpc.common.consts.URLParamKeyConst;
+import com.ccx.rpc.common.consts.URLKeyConst;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
@@ -52,7 +52,7 @@ public class CuratorZkClient {
     private final CuratorFramework client;
 
     public CuratorZkClient(URL url) {
-        int timeout = url.getIntParam(URLParamKeyConst.TIMEOUT, DEFAULT_CONNECTION_TIMEOUT_MS);
+        int timeout = url.getIntParam(URLKeyConst.TIMEOUT, DEFAULT_CONNECTION_TIMEOUT_MS);
         int sessionTimeout = url.getIntParam(SESSION_TIMEOUT_KEY, DEFAULT_SESSION_TIMEOUT_MS);
         CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
                 .connectString(url.getAddress())

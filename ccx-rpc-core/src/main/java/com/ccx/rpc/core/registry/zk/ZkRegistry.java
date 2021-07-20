@@ -3,7 +3,7 @@ package com.ccx.rpc.core.registry.zk;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLEncoder;
 import com.ccx.rpc.common.consts.RegistryConst;
-import com.ccx.rpc.common.consts.URLParamKeyConst;
+import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.url.URLParser;
@@ -51,7 +51,7 @@ public class ZkRegistry implements Registry {
     }
 
     private String toServicePath(URL url, boolean isProvider) {
-        return url.getParam(URLParamKeyConst.INTERFACE, url.getPath())
+        return url.getParam(URLKeyConst.INTERFACE, url.getPath())
                 + "/" + (isProvider ? RegistryConst.PROVIDERS_CATEGORY : RegistryConst.CONSUMERS_CATEGORY);
     }
 

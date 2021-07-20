@@ -1,6 +1,6 @@
 package com.ccx.rpc.common.test.extension.adaptive;
 
-import com.ccx.rpc.common.consts.URLParamKeyConst;
+import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.extension.Adaptive;
 import com.ccx.rpc.common.extension.SPI;
 import com.ccx.rpc.common.url.URL;
@@ -12,6 +12,6 @@ import com.ccx.rpc.common.url.URL;
 @SPI
 public interface ExtFactory {
 
-    @Adaptive(URLParamKeyConst.PROTOCOL)
+    @Adaptive(URLKeyConst.PROTOCOL)
     Ext getExt(URL url);
 }

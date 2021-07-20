@@ -1,6 +1,6 @@
 package com.ccx.rpc.common.extension;
 
-import com.ccx.rpc.common.consts.URLParamKeyConst;
+import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.url.URL;
 
 import java.lang.reflect.InvocationHandler;
@@ -42,7 +42,7 @@ public class AdaptiveInvocationHandler<T> implements InvocationHandler {
 
         String extendNameKey = adaptive.value();
         String extendName;
-        if (URLParamKeyConst.PROTOCOL.equals(extendNameKey)) {
+        if (URLKeyConst.PROTOCOL.equals(extendNameKey)) {
             extendName = url.getProtocol();
         } else {
             extendName = url.getParam(extendNameKey, method.getDeclaringClass() + "." + method.getName());
