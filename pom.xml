@@ -22,6 +22,7 @@
         <curator.version>5.1.0</curator.version>
         <lombok.version>1.18.12</lombok.version>
         <hutool.version>5.7.4</hutool.version>
+        <protostuff.version>1.7.4</protostuff.version>
     </properties>
 
     <dependencyManagement>

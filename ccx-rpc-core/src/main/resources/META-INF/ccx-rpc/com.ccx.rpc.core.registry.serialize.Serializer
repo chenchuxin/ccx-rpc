@@ -1,0 +1,1 @@
+protostuff=com.ccx.rpc.core.registry.serialize.ProtostuffSerializer
