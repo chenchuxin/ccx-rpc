@@ -1,5 +1,6 @@
-package com.ccx.rpc.core.serialize;
+package com.ccx.rpc.core.serialize.protostuff;
 
+import com.ccx.rpc.core.serialize.Serializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;

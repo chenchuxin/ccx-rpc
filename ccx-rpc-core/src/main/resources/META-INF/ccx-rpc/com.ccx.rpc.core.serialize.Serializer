@@ -1,1 +1,1 @@
-protostuff=com.ccx.rpc.core.serialize.ProtostuffSerializer
+protostuff=com.ccx.rpc.core.serialize.protostuff.ProtostuffSerializer
