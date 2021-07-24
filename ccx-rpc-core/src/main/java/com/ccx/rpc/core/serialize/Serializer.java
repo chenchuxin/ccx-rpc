@@ -1,4 +1,4 @@
-package com.ccx.rpc.core.registry.serialize;
+package com.ccx.rpc.core.serialize;
 
 import com.ccx.rpc.common.extension.SPI;
 
