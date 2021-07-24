@@ -1,10 +1,10 @@
 package com.ccx.rpc.core.registry.local;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import com.ccx.rpc.common.url.URL;
-import com.ccx.rpc.core.registry.Registry;
+import com.ccx.rpc.core.registry.AbstractRegistry;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,22 +14,22 @@ import java.util.Set;
  * @author chenchuxin
  * @date 2021/7/18
  */
-public class LocalRegistry implements Registry {
+public class LocalRegistry extends AbstractRegistry {
 
-    private static final Set<URL> urls = new HashSet<>();
+    private static final Set<URL> urls = new ConcurrentHashSet<>();
 
     @Override
-    public void register(URL url) {
+    public void doRegister(URL url) {
         urls.add(url);
     }
 
     @Override
-    public void unregister(URL url) {
+    public void doUnregister(URL url) {
         urls.remove(url);
     }
 
     @Override
-    public List<URL> lookup(URL condition) {
+    public List<URL> doLookup(URL condition) {
         return new ArrayList<>(urls);
     }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLEncoder;
 import com.ccx.rpc.common.consts.RegistryConst;
 import com.ccx.rpc.common.consts.URLKeyConst;
+import com.ccx.rpc.core.registry.AbstractRegistry;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.url.URLParser;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  * @author chenchuxin
  * @date 2021/7/18
  */
-public class ZkRegistry implements Registry {
+public class ZkRegistry extends AbstractRegistry {
 
     private final CuratorZkClient zkClient;
     private static final URLEncoder urlEncoder = URLEncoder.createPathSegment();
@@ -30,17 +31,17 @@ public class ZkRegistry implements Registry {
     }
 
     @Override
-    public void register(URL url) {
+    public void doRegister(URL url) {
         zkClient.createPersistentNode(toUrlPath(url, true));
     }
 
     @Override
-    public void unregister(URL url) {
+    public void doUnregister(URL url) {
         zkClient.removeNode(toUrlPath(url, true));
     }
 
     @Override
-    public List<URL> lookup(URL condition) {
+    public List<URL> doLookup(URL condition) {
         List<String> children = zkClient.getChildren(toServicePath(condition, true));
         return children.stream().map(s -> URLParser.toURL(URLDecoder.decode(s, charset)))
                 .collect(Collectors.toList());
