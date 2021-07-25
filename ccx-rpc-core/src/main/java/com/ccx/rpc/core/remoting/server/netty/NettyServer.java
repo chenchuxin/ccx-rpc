@@ -1,5 +1,7 @@
 package com.ccx.rpc.core.remoting.server.netty;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import com.ccx.rpc.core.remoting.codec.RpcMessageDecoder;
 import com.ccx.rpc.core.remoting.codec.RpcMessageEncoder;
 import com.ccx.rpc.core.remoting.server.ShutdownHook;
@@ -13,6 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +23,8 @@ import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * netty 服务端
+ *
  * @author chenchuxin
  * @date 2021/7/24
  */
@@ -33,6 +38,10 @@ public class NettyServer {
         ShutdownHook.addShutdownHook();
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
+                RuntimeUtil.getProcessorCount() * 2,
+                ThreadUtil.newNamedThreadFactory("service-handler-group", false)
+        );
         try {
             ServerBootstrap bootstrap = new ServerBootstrap()
                     .group(bossGroup, workerGroup)
@@ -53,10 +62,11 @@ public class NettyServer {
                             ChannelPipeline p = ch.pipeline();
                             // 30 秒之内没有收到客户端请求的话就关闭连接
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            // 编码器
+                            // 编解码器
                             p.addLast(new RpcMessageEncoder());
                             p.addLast(new RpcMessageDecoder());
-                            // TODO RPC 消息处理器
+                            // RPC 消息处理器
+                            p.addLast(serviceHandlerGroup, new NettyServerHandler());
                         }
                     });
             String host = InetAddress.getLocalHost().getHostAddress();

@@ -2,8 +2,10 @@ package com.ccx.rpc.core.remoting.dto;
 
 import com.ccx.rpc.core.consts.CompressorType;
 import com.ccx.rpc.core.consts.MessageType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author chenchuxin
@@ -11,6 +13,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcMessage {
     /**
      * 消息类型 {@link MessageType#getValue()}
