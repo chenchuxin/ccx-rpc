@@ -1,6 +1,5 @@
 package com.ccx.rpc.core.remoting.codec;
 
-import cn.hutool.core.lang.Assert;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.core.compress.Compressor;
 import com.ccx.rpc.core.consts.CodecType;
@@ -13,11 +12,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 /**
  * <p>
- * custom protocol decoder
+ * 自定义协议编码器
  * <p>
  * <pre>
  *   0     1     2       3    4    5    6    7           8        9        10   11   12   13   14   15   16   17   18
@@ -29,31 +26,25 @@ import java.util.concurrent.atomic.AtomicLong;
  *   |                                                                                                             |
  *   |                                        ... ...                                                              |
  *   +-------------------------------------------------------------------------------------------------------------+
- * 2B magic code（魔法数）
- * 1B version（版本）
- * 4B full length（消息长度）
- * 1B messageType（消息类型）
- * 1B codec（序列化类型）
- * 1B compress（压缩类型）
- * 8B requestId（请求的Id）
- * body（object类型数据）
+ *   2B magic code（魔法数）
+ *   1B version（版本）
+ *   4B full length（消息长度）
+ *   1B messageType（消息类型）
+ *   1B codec（序列化类型）
+ *   1B compress（压缩类型）
+ *   8B requestId（请求的Id）
+ *   body（object类型数据）
  * </pre>
  *
  * @author chenchuxin
  * @date 2021/7/25
- * @see <a href="https://zhuanlan.zhihu.com/p/95621344">LengthFieldBasedFrameDecoder解码器</a>
  */
 public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
-
-    /**
-     * 请求 id
-     */
-    private static final AtomicLong REQ_ID = new AtomicLong(0);
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RpcMessage rpcMessage, ByteBuf out) {
         // 2B magic code（魔法数）
-        out.writeBytes(MessageFormatConst.MAGIC_NUMBER);
+        out.writeBytes(MessageFormatConst.MAGIC);
         // 1B version（版本）
         out.writeByte(MessageFormatConst.VERSION);
         // 4B full length（消息长度）. 总长度先空着，后面填。
@@ -65,7 +56,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         // 1B compress（压缩类型）
         out.writeByte(rpcMessage.getCompress());
         // 8B requestId（请求的Id）
-        out.writeLong(REQ_ID.getAndIncrement());
+        out.writeLong(MessageFormatConst.REQUEST_ID.getAndIncrement());
         // 写 body，返回 body 长度
         int bodyLength = writeBody(rpcMessage, out);
 

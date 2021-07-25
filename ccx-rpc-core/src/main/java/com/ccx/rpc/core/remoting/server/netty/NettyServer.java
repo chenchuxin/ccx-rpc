@@ -1,5 +1,7 @@
 package com.ccx.rpc.core.remoting.server.netty;
 
+import com.ccx.rpc.core.remoting.codec.RpcMessageDecoder;
+import com.ccx.rpc.core.remoting.codec.RpcMessageEncoder;
 import com.ccx.rpc.core.remoting.server.ShutdownHook;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -51,7 +53,9 @@ public class NettyServer {
                             ChannelPipeline p = ch.pipeline();
                             // 30 秒之内没有收到客户端请求的话就关闭连接
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            // TODO 解码编码器
+                            // 编码器
+                            p.addLast(new RpcMessageEncoder());
+                            p.addLast(new RpcMessageDecoder());
                             // TODO RPC 消息处理器
                         }
                     });

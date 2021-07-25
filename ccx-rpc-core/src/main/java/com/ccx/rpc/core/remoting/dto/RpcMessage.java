@@ -1,7 +1,8 @@
 package com.ccx.rpc.core.remoting.dto;
 
-import com.ccx.rpc.core.consts.CompressType;
+import com.ccx.rpc.core.consts.CompressorType;
 import com.ccx.rpc.core.consts.MessageType;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @date 2021/7/24
  */
 @Data
+@Builder
 public class RpcMessage {
     /**
      * 消息类型 {@link MessageType#getValue()}
@@ -16,7 +18,7 @@ public class RpcMessage {
     private byte messageType;
 
     /**
-     * 压缩类型 {@link CompressType#getValue()}
+     * 压缩类型 {@link CompressorType#getValue()}
      */
     private byte compress;
 
@@ -25,7 +27,7 @@ public class RpcMessage {
      */
     private byte codec;
 
-    private int requestId;
+    private long requestId;
 
     private Object data;
 }
