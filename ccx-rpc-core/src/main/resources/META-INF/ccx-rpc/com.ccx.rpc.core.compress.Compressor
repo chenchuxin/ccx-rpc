@@ -1,0 +1,1 @@
+gzip=com.ccx.rpc.core.compress.gzip.GzipCompressor
