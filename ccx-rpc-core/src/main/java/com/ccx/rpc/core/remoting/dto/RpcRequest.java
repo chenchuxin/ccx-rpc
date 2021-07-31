@@ -1,6 +1,5 @@
 package com.ccx.rpc.core.remoting.dto;
 
-import com.google.common.base.Joiner;
 import lombok.Data;
 
 /**
@@ -17,12 +16,4 @@ public class RpcRequest {
     private Object[] params;
     private Class<?>[] paramTypes;
     private String version;
-    private String group;
-
-    /**
-     * 获取服务名
-     */
-    public String getServiceName() {
-        return Joiner.on("_").join(interfaceName, group, version);
-    }
 }

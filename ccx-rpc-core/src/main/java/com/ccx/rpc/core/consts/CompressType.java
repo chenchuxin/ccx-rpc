@@ -11,15 +11,24 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum CompressorType {
+public enum CompressType {
     GZIP((byte) 1, "gzip");
 
     private final byte value;
     private final String name;
 
-    public static CompressorType fromValue(byte value) {
-        for (CompressorType codecType : CompressorType.values()) {
+    public static CompressType fromValue(byte value) {
+        for (CompressType codecType : CompressType.values()) {
             if (codecType.getValue() == value) {
+                return codecType;
+            }
+        }
+        return null;
+    }
+
+    public static CompressType fromName(String name) {
+        for (CompressType codecType : CompressType.values()) {
+            if (codecType.getName().equals(name)) {
                 return codecType;
             }
         }

@@ -27,7 +27,11 @@ public class ConfigManager {
         return new RegistryConfig();
     }
 
-    public ServiceConfig getServiceConfig(){
+    public ServiceConfig getServiceConfig() {
         return new ServiceConfig();
+    }
+
+    public ProtocolConfig getProtocolConfig() {
+        return new ProtocolConfig();
     }
 }

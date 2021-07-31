@@ -2,8 +2,8 @@ package com.ccx.rpc.core.remoting.codec;
 
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.core.compress.Compressor;
-import com.ccx.rpc.core.consts.CodecType;
-import com.ccx.rpc.core.consts.CompressorType;
+import com.ccx.rpc.core.consts.SerializeType;
+import com.ccx.rpc.core.consts.CompressType;
 import com.ccx.rpc.core.consts.MessageType;
 import com.ccx.rpc.core.remoting.dto.RpcMessage;
 import com.ccx.rpc.core.remoting.dto.RpcRequest;
@@ -88,8 +88,8 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         long requestId = in.readLong();
 
         RpcMessage rpcMessage = RpcMessage.builder()
-                .codec(codec)
-                .compress(compress)
+                .serializeType(codec)
+                .compressTye(compress)
                 .requestId(requestId)
                 .messageType(messageType)
                 .build();
@@ -111,19 +111,19 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         byte[] bodyBytes = new byte[bodyLength];
         in.readBytes(bodyBytes);
         // 解压
-        CompressorType compressorType = CompressorType.fromValue(compress);
-        if (compressorType == null) {
+        CompressType compressType = CompressType.fromValue(compress);
+        if (compressType == null) {
             throw new IllegalArgumentException("unknown compress type:" + compress);
         }
-        Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(compressorType.getName());
+        Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(compressType.getName());
         byte[] decompressedBytes = compressor.decompress(bodyBytes);
 
         // 反序列化
-        CodecType codecType = CodecType.fromValue(codec);
-        if (codecType == null) {
+        SerializeType serializeType = SerializeType.fromValue(codec);
+        if (serializeType == null) {
             throw new IllegalArgumentException("unknown codec type:" + codec);
         }
-        Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecType.getName());
+        Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeType.getName());
         Class<?> clazz = messageType == MessageType.REQUEST.getValue() ? RpcRequest.class : RpcResponse.class;
         Object object = serializer.deserialize(decompressedBytes, clazz);
         rpcMessage.setData(object);

@@ -2,8 +2,8 @@ package com.ccx.rpc.core.remoting.codec;
 
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.core.compress.Compressor;
-import com.ccx.rpc.core.consts.CodecType;
-import com.ccx.rpc.core.consts.CompressorType;
+import com.ccx.rpc.core.consts.SerializeType;
+import com.ccx.rpc.core.consts.CompressType;
 import com.ccx.rpc.core.consts.MessageFormatConst;
 import com.ccx.rpc.core.consts.MessageType;
 import com.ccx.rpc.core.remoting.dto.RpcMessage;
@@ -52,9 +52,9 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         // 1B messageType（消息类型）
         out.writeByte(rpcMessage.getMessageType());
         // 1B codec（序列化类型）
-        out.writeByte(rpcMessage.getCodec());
+        out.writeByte(rpcMessage.getSerializeType());
         // 1B compress（压缩类型）
-        out.writeByte(rpcMessage.getCompress());
+        out.writeByte(rpcMessage.getCompressTye());
         // 8B requestId（请求的Id）
         out.writeLong(MessageFormatConst.REQUEST_ID.getAndIncrement());
         // 写 body，返回 body 长度
@@ -83,18 +83,18 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         }
 
         // 序列化器
-        CodecType codecType = CodecType.fromValue(rpcMessage.getCodec());
-        if (codecType == null) {
+        SerializeType serializeType = SerializeType.fromValue(rpcMessage.getSerializeType());
+        if (serializeType == null) {
             throw new IllegalArgumentException("codec type not found");
         }
-        Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecType.getName());
+        Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeType.getName());
 
         // 压缩器
-        CompressorType compressorType = CompressorType.fromValue(rpcMessage.getCompress());
-        if (compressorType == null) {
+        CompressType compressType = CompressType.fromValue(rpcMessage.getCompressTye());
+        if (compressType == null) {
             throw new IllegalArgumentException("compressor type not found");
         }
-        Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(compressorType.getName());
+        Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(compressType.getName());
 
         // 序列化
         byte[] notCompressBytes = serializer.serialize(rpcMessage.getData());

@@ -19,4 +19,8 @@ public interface URLKeyConst {
     String PROTOCOL = "protocol";
 
     String VERSION = "version";
+
+    String ANY_HOST = "anyHost";
+
+    String CCX_RPC_PROTOCOL = "ccx-rpc";
 }

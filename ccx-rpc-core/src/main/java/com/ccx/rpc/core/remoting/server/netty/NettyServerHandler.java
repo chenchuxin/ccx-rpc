@@ -24,8 +24,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcMessage> 
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage requestMsg) {
         try {
             RpcMessage.RpcMessageBuilder responseMsgBuilder = RpcMessage.builder()
-                    .codec(requestMsg.getCodec())
-                    .compress(requestMsg.getCompress());
+                    .serializeType(requestMsg.getSerializeType())
+                    .compressTye(requestMsg.getCompressTye());
             if (requestMsg.getMessageType() == MessageType.HEARTBEAT_PING.getValue()) {
                 responseMsgBuilder.messageType(MessageType.HEARTBEAT_PONG.getValue());
                 responseMsgBuilder.data(MessageFormatConst.PONG_DATA);

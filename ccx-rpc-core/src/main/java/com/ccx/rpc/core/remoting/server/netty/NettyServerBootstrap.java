@@ -19,10 +19,8 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/7/24
  */
 @Slf4j
-public class NettyServer {
+public class NettyServerBootstrap {
 
     public void start() {
         ShutdownHook.addShutdownHook();
