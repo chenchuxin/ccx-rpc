@@ -17,4 +17,6 @@ public interface URLKeyConst {
     String INTERFACE = "interface";
 
     String PROTOCOL = "protocol";
+
+    String VERSION = "version";
 }

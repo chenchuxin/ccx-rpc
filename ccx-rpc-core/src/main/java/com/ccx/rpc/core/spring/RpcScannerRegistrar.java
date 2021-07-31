@@ -14,10 +14,22 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
+ * rpc 扫描注册
+ *
  * @author chenchuxin
  * @date 2021/7/30
  */
 public class RpcScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
+
+    /**
+     * 服务扫描的基础包，是 @RpcScan 的哪个属性
+     */
+    private static final String SERVER_SCANNER_BASE_PACKAGE_FIELD = "basePackages";
+
+    /**
+     * 内部扫描的基础包列表
+     */
+    private static final String[] INNER_SCANNER_BASE_PACKAGES = {"com.ccx.rpc"};
 
     private ResourceLoader resourceLoader;
 
@@ -30,15 +42,15 @@ public class RpcScannerRegistrar implements ImportBeanDefinitionRegistrar, Resou
         //扫描注解
         Map<String, Object> annotationAttributes = importingClassMetadata
                 .getAnnotationAttributes(RpcScan.class.getName());
-        String[] basePackages = (String[]) annotationAttributes.get("basePackages");
         RpcScanner serviceScanner = new RpcScanner(registry, RpcService.class);
-        // 消费者关注多个注解
-        RpcScanner clientScanner = new RpcScanner(registry, Component.class, Service.class, Resource.class);
+        // ccx-rpc 内部的类
+        RpcScanner innerScanner = new RpcScanner(registry, Component.class, Service.class, Resource.class);
         if (resourceLoader != null) {
             serviceScanner.setResourceLoader(resourceLoader);
-            clientScanner.setResourceLoader(resourceLoader);
+            innerScanner.setResourceLoader(resourceLoader);
         }
-        serviceScanner.scan(basePackages);
-        clientScanner.scan(basePackages);
+        String[] serviceBasePackages = (String[]) annotationAttributes.get(SERVER_SCANNER_BASE_PACKAGE_FIELD);
+        serviceScanner.scan(serviceBasePackages);
+        innerScanner.scan(INNER_SCANNER_BASE_PACKAGES);
     }
 }

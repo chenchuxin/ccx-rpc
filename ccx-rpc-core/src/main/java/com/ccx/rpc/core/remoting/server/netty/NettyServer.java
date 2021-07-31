@@ -1,7 +1,10 @@
 package com.ccx.rpc.core.remoting.server.netty;
 
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import com.ccx.rpc.core.config.ConfigManager;
+import com.ccx.rpc.core.config.ServiceConfig;
 import com.ccx.rpc.core.remoting.codec.RpcMessageDecoder;
 import com.ccx.rpc.core.remoting.codec.RpcMessageEncoder;
 import com.ccx.rpc.core.remoting.server.ShutdownHook;
@@ -30,9 +33,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class NettyServer {
-
-    @Getter
-    private static final int PORT = 5630;
 
     public void start() {
         ShutdownHook.addShutdownHook();
@@ -69,9 +69,9 @@ public class NettyServer {
                             p.addLast(serviceHandlerGroup, new NettyServerHandler());
                         }
                     });
-            String host = InetAddress.getLocalHost().getHostAddress();
             // 绑定端口，同步等待绑定成功
-            ChannelFuture channelFuture = bootstrap.bind(host, PORT).sync();
+            ServiceConfig serviceConfig = ConfigManager.getInstant().getServiceConfig();
+            ChannelFuture channelFuture = bootstrap.bind(NetUtil.getLocalHostName(), serviceConfig.getPort()).sync();
             // 等待服务端监听端口关闭
             channelFuture.channel().closeFuture().sync();
         } catch (Exception ex) {

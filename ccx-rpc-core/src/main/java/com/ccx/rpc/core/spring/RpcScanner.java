@@ -7,6 +7,8 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import java.lang.annotation.Annotation;
 
 /**
+ * rpc 类扫描
+ *
  * @author chenchuxin
  * @date 2021/7/30
  */
