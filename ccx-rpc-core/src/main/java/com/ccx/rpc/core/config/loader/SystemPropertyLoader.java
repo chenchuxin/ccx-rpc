@@ -1,7 +1,9 @@
 package com.ccx.rpc.core.config.loader;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.ccx.rpc.core.config.Config;
+import com.ccx.rpc.core.annotation.Config;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -29,9 +31,12 @@ public class SystemPropertyLoader implements ConfigLoader {
             T configObject = clazz.newInstance();
             for (Field field : clazz.getDeclaredFields()) {
                 String property = System.getProperty(prefix + "." + field.getName());
-                Object typeValue = field.getType().cast(property);
+                if (property == null) {
+                    continue;
+                }
+                Object convertedValue = Convert.convert(field.getType(), property);
                 field.setAccessible(true);
-                field.set(configObject, typeValue);
+                field.set(configObject, convertedValue);
             }
             return configObject;
         } catch (Exception e) {

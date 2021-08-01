@@ -20,6 +20,7 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/7/24
  */
 @Slf4j
+@Component
 public class NettyServerBootstrap {
 
     public void start() {
@@ -70,6 +72,7 @@ public class NettyServerBootstrap {
             // 绑定端口，同步等待绑定成功
             ServiceConfig serviceConfig = ConfigManager.getInstant().getServiceConfig();
             ChannelFuture channelFuture = bootstrap.bind(NetUtil.getLocalHostName(), serviceConfig.getPort()).sync();
+            log.info("server start success. port=" + serviceConfig.getPort());
             // 等待服务端监听端口关闭
             channelFuture.channel().closeFuture().sync();
         } catch (Exception ex) {

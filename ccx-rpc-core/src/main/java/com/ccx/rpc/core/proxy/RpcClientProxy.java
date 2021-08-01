@@ -1,7 +1,7 @@
 package com.ccx.rpc.core.proxy;
 
 import cn.hutool.core.lang.UUID;
-import com.ccx.rpc.common.annotation.RpcReference;
+import com.ccx.rpc.core.annotation.RpcReference;
 import com.ccx.rpc.core.remoting.client.netty.NettyClient;
 import com.ccx.rpc.core.remoting.dto.RpcRequest;
 import com.ccx.rpc.core.remoting.dto.RpcResponse;

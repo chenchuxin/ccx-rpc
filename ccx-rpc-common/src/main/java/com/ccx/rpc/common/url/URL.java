@@ -107,4 +107,9 @@ public class URL {
     public static URL valueOf(String url) {
         return URLParser.toURL(url);
     }
+
+    @Override
+    public String toString() {
+        return toFullString();
+    }
 }

@@ -2,8 +2,8 @@ package com.ccx.rpc.core.spring;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
-import com.ccx.rpc.common.annotation.RpcReference;
-import com.ccx.rpc.common.annotation.RpcService;
+import com.ccx.rpc.core.annotation.RpcReference;
+import com.ccx.rpc.core.annotation.RpcService;
 import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.common.url.URL;

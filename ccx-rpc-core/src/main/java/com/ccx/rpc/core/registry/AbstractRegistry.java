@@ -3,6 +3,7 @@ package com.ccx.rpc.core.registry;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.lang.Assert;
 import com.ccx.rpc.common.url.URL;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Set;
  * @author chenchuxin
  * @date 2021/7/24
  */
+@Slf4j
 public abstract class AbstractRegistry implements Registry {
 
     private final Set<URL> registered = new ConcurrentHashSet<>();
@@ -57,6 +59,7 @@ public abstract class AbstractRegistry implements Registry {
         Assert.notNull(url, "register url == null");
         doRegister(url);
         registered.add(url);
+        log.info("register: {}", url);
     }
 
     /**
@@ -69,6 +72,7 @@ public abstract class AbstractRegistry implements Registry {
         Assert.notNull(url, "register url == null");
         doUnregister(url);
         registered.remove(url);
+        log.info("unregister: {}", url);
     }
 
     /**
@@ -79,6 +83,8 @@ public abstract class AbstractRegistry implements Registry {
      */
     @Override
     public List<URL> lookup(URL condition) {
-        return doLookup(condition);
+        List<URL> urls = doLookup(condition);
+        log.info("lookup: {}", urls);
+        return urls;
     }
 }

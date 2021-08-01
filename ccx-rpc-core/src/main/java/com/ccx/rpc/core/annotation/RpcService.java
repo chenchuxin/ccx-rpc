@@ -1,4 +1,4 @@
-package com.ccx.rpc.common.annotation;
+package com.ccx.rpc.core.annotation;
 
 import java.lang.annotation.*;
 

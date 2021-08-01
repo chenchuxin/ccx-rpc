@@ -1,6 +1,7 @@
 package com.ccx.rpc.core.config;
 
 import com.ccx.rpc.common.url.URL;
+import com.ccx.rpc.core.annotation.Config;
 import lombok.Data;
 
 /**

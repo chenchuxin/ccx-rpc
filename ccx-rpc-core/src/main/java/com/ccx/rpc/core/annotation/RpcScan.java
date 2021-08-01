@@ -1,4 +1,7 @@
-package com.ccx.rpc.common.annotation;
+package com.ccx.rpc.core.annotation;
+
+import com.ccx.rpc.core.spring.RpcScannerRegistrar;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
@@ -9,6 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Import(RpcScannerRegistrar.class)
 public @interface RpcScan {
     String[] basePackages();
 }

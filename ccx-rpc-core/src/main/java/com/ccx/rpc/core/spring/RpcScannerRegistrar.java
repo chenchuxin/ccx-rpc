@@ -1,7 +1,9 @@
 package com.ccx.rpc.core.spring;
 
-import com.ccx.rpc.common.annotation.RpcScan;
-import com.ccx.rpc.common.annotation.RpcService;
+import cn.hutool.core.util.StrUtil;
+import com.ccx.rpc.core.annotation.RpcScan;
+import com.ccx.rpc.core.annotation.RpcService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @author chenchuxin
  * @date 2021/7/30
  */
+@Slf4j
 public class RpcScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
 
     /**
@@ -50,7 +53,9 @@ public class RpcScannerRegistrar implements ImportBeanDefinitionRegistrar, Resou
             innerScanner.setResourceLoader(resourceLoader);
         }
         String[] serviceBasePackages = (String[]) annotationAttributes.get(SERVER_SCANNER_BASE_PACKAGE_FIELD);
-        serviceScanner.scan(serviceBasePackages);
-        innerScanner.scan(INNER_SCANNER_BASE_PACKAGES);
+        int serviceCount = serviceScanner.scan(serviceBasePackages);
+        log.info(StrUtil.format("serviceScanner. packages={}, count={}", serviceBasePackages, serviceCount));
+        int innerCount = innerScanner.scan(INNER_SCANNER_BASE_PACKAGES);
+        log.info(StrUtil.format("innerScanner. packages={}, count={}", INNER_SCANNER_BASE_PACKAGES, innerCount));
     }
 }
