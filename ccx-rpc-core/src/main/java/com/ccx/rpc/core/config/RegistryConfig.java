@@ -10,6 +10,7 @@ import lombok.Data;
  * @date 2021/7/31
  */
 @Data
+@Config(prefix = "registry")
 public class RegistryConfig {
 
     /**

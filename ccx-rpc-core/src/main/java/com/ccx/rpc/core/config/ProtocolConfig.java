@@ -11,6 +11,7 @@ import lombok.Data;
  * @date 2021/8/1
  */
 @Data
+@Config(prefix = "protocol")
 public class ProtocolConfig {
 
     /**

@@ -9,6 +9,7 @@ import lombok.Data;
  * @date 2021/7/31
  */
 @Data
+@Config(prefix = "service")
 public class ServiceConfig {
     /**
      * 监听的端口

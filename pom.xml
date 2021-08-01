@@ -10,6 +10,7 @@
     <modules>
         <module>ccx-rpc-core</module>
         <module>ccx-rpc-common</module>
+        <module>ccx-rpc-demo</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -25,6 +26,7 @@
         <protostuff.version>1.7.4</protostuff.version>
         <netty.version>4.1.66.Final</netty.version>
         <spring.version>5.3.9</spring.version>
+        <spring-boot.version>2.5.3</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -85,7 +87,12 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>5.3.9</version>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
