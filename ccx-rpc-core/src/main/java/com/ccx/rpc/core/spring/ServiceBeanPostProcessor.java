@@ -11,6 +11,7 @@ import com.ccx.rpc.core.config.ConfigManager;
 import com.ccx.rpc.core.config.RegistryConfig;
 import com.ccx.rpc.core.config.ServiceConfig;
 import com.ccx.rpc.core.proxy.RpcClientProxy;
+import com.ccx.rpc.core.proxy.RpcServiceCache;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.core.registry.RegistryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -42,6 +42,8 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
             RegistryConfig registryConfig = ConfigManager.getInstant().getRegistryConfig();
             Registry registry = registryFactory.getRegistry(registryConfig.toURL());
             registry.register(buildServiceURL(bean, rpcService));
+            // 然后把服务放到缓存中，方便后续通过 rpcServiceName 获取服务
+            RpcServiceCache.addService(rpcService.version(), bean);
         }
         return bean;
     }

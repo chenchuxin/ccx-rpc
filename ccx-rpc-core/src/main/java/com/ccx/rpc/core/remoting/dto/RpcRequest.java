@@ -1,5 +1,6 @@
 package com.ccx.rpc.core.remoting.dto;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,11 @@ public class RpcRequest {
     private Object[] params;
     private Class<?>[] paramTypes;
     private String version;
+
+    public String getRpcServiceForCache() {
+        if (StrUtil.isBlank(version)) {
+            return interfaceName;
+        }
+        return interfaceName + "_" + version;
+    }
 }
