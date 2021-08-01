@@ -10,8 +10,10 @@ import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.core.config.ConfigManager;
 import com.ccx.rpc.core.config.RegistryConfig;
 import com.ccx.rpc.core.config.ServiceConfig;
+import com.ccx.rpc.core.proxy.RpcClientProxy;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.core.registry.RegistryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @author chenchuxin
  * @date 2021/7/31
  */
+@Slf4j
 @Component
 public class ServiceBeanPostProcessor implements BeanPostProcessor {
     @Override
@@ -49,7 +52,16 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
         for (Field field : fields) {
             RpcReference rpcReference = field.getAnnotation(RpcReference.class);
             if (rpcReference != null) {
-                // TODO: 代理
+                // 生成代理对象
+                RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcReference);
+                Object proxy = rpcClientProxy.getProxy(field.getType());
+                field.setAccessible(true);
+                try {
+                    // 设置字段
+                    field.set(bean, proxy);
+                } catch (IllegalAccessException e) {
+                    log.error("field.set error. bean={}, field={}", bean.getClass(), field.getName(), e);
+                }
             }
         }
         return bean;

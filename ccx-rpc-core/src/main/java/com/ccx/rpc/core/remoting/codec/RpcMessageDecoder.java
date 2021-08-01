@@ -20,12 +20,12 @@ import static com.ccx.rpc.core.consts.MessageFormatConst.*;
 
 /**
  * <p>
- * 自定义协议编码器
+ * 自定义协议解码器
  * <p>
  * <pre>
  *   0     1     2       3    4    5    6    7           8        9        10   11   12   13   14   15   16   17   18
- *   +-----+-----+-------+----+----+----+----+-----------+--------+--------+----+----+----+----+----+----+----+----+
- *   |   magic   |version|    full length    |messageType|  codec |compress|              RequestId                |
+ *   +-----+-----+-------+----+----+----+----+-----------+---------+--------+----+----+----+----+----+----+----+----+
+ *   |   magic   |version|    full length    |messageType|serialize|compress|              RequestId                |
  *   +-----+-----+-------+----+----+----+----+-----------+--------+--------+----+----+----+----+----+----+----+----+
  *   |                                                                                                             |
  *   |                                         body                                                                |
@@ -36,7 +36,7 @@ import static com.ccx.rpc.core.consts.MessageFormatConst.*;
  *   1B version（版本）
  *   4B full length（消息长度）
  *   1B messageType（消息类型）
- *   1B codec（序列化类型）
+ *   1B serialize（序列化类型）
  *   1B compress（压缩类型）
  *   8B requestId（请求的Id）
  *   body（object类型数据）
