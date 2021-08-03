@@ -32,7 +32,7 @@ public class RpcScannerRegistrar implements ImportBeanDefinitionRegistrar, Resou
     /**
      * 内部扫描的基础包列表
      */
-    private static final String[] INNER_SCANNER_BASE_PACKAGES = {"com.ccx.rpc"};
+    private static final String[] INNER_SCANNER_BASE_PACKAGES = {"com.ccx.rpc.common", "com.ccx.rpc.core"};
 
     private ResourceLoader resourceLoader;
 

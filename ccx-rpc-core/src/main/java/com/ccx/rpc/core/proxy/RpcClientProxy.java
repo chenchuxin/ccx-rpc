@@ -46,7 +46,7 @@ public class RpcClientProxy implements InvocationHandler {
         RpcRequest request = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getCanonicalName())
                 .methodName(method.getName())
-                .params(method.getParameters())
+                .params(args)
                 .paramTypes(method.getParameterTypes())
                 .requestId(UUID.fastUUID().toString())
                 .version(rpcReference.version())
