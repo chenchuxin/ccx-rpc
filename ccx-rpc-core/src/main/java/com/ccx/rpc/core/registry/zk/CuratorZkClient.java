@@ -45,7 +45,7 @@ public class CuratorZkClient {
     /**
      * 根目录
      */
-    private static final String ROOT_PATH = "/META-INF/ccx-rpc";
+    private static final String ROOT_PATH = "/ccx-rpc";
     /**
      * zk 客户端
      */

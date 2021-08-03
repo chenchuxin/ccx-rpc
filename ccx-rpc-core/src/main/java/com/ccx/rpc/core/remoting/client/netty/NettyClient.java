@@ -1,6 +1,7 @@
 package com.ccx.rpc.core.remoting.client.netty;
 
 import cn.hutool.core.util.StrUtil;
+import com.ccx.rpc.common.consts.RpcException;
 import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.common.url.URL;
@@ -21,9 +22,11 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -70,7 +73,7 @@ public class NettyClient {
     private NettyClient() {
         bootstrap = new Bootstrap()
                 .group(new NioEventLoopGroup())
-                .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .handler(new ChannelInitializer<SocketChannel>() {
@@ -174,17 +177,20 @@ public class NettyClient {
      * @param address 地址
      * @return channel
      */
-    @SneakyThrows
     private Channel connect(SocketAddress address) {
-        CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
-        ChannelFuture connect = bootstrap.connect(address);
-        connect.addListener((ChannelFutureListener) future -> {
-            if (future.isSuccess()) {
-                completableFuture.complete(future.channel());
-            } else {
-                throw new IllegalStateException(StrUtil.format("connect fail. address", address));
-            }
-        });
-        return completableFuture.get();
+        try {
+            CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
+            ChannelFuture connect = bootstrap.connect(address);
+            connect.addListener((ChannelFutureListener) future -> {
+                if (future.isSuccess()) {
+                    completableFuture.complete(future.channel());
+                } else {
+                    throw new IllegalStateException(StrUtil.format("connect fail. address", address));
+                }
+            });
+            return completableFuture.get();
+        } catch (Exception ex) {
+            throw new RpcException(address + " connect fail.", ex);
+        }
     }
 }

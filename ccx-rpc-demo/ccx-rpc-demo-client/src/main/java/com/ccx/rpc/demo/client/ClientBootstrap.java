@@ -1,5 +1,6 @@
 package com.ccx.rpc.demo.client;
 
+import com.ccx.rpc.core.annotation.RpcScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,10 +11,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2021/8/1
  */
 @SpringBootApplication
+@RpcScan(basePackages = {"com.ccx.rpc.demo.client"})
 public class ClientBootstrap {
 
     public static void main(String[] args) {
-        System.setProperty("registry.address", "local://localhost:123");
+        System.setProperty("registry.address", "zk://localhost:2181");
+        System.setProperty("protocol.serializeType", "protostuff");
+        System.setProperty("protocol.compressType", "gzip");
         SpringApplication.run(ClientBootstrap.class, args);
     }
 
