@@ -4,6 +4,10 @@
 这是一个基于 Netty + Zookeeper + Protostuff 的简易 RPC 框架。
 造轮子主要是为了学习，因为我觉得"会用"、"会读源码"、"会写出来"是完全不一样的水平。
 
+github: https://github.com/chenchuxin/ccx-rpc
+
+gitee: https://gitee.com/imccx/ccx-rpc
+
 #### 架构
 以下是重要的包的简介：
 ```
