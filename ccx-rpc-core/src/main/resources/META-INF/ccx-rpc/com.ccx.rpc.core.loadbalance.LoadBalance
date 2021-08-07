@@ -1,0 +1,2 @@
+random=com.ccx.rpc.core.loadbalance.RandomLoadBalance
+round-robin=com.ccx.rpc.core.loadbalance.RoundRobinLoadBalance

@@ -60,4 +60,8 @@ public class ConfigManager {
     public ProtocolConfig getProtocolConfig() {
         return loadConfig(ProtocolConfig.class);
     }
+
+    public ClusterConfig getClusterConfig() {
+        return loadConfig(ClusterConfig.class);
+    }
 }

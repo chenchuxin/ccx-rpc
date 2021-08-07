@@ -1,5 +1,7 @@
 package com.ccx.rpc.common.extension;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,10 +109,13 @@ public class ExtensionLoader<T> {
     /**
      * 根据名字获取扩展类实例(单例)
      *
-     * @param name 扩展类在配置文件中配置的名字
+     * @param name 扩展类在配置文件中配置的名字. 如果名字是空的或者空白的，则返回默认扩展
      * @return 单例扩展类实例，如果找不到，则抛出异常
      */
     public T getExtension(String name) {
+        if (StrUtil.isBlank(name)) {
+            return getDefaultExtension();
+        }
         // 从缓存中获取单例
         T extension = extensionsCache.get(name);
         if (extension == null) {

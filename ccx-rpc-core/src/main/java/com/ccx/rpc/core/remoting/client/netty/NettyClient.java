@@ -11,6 +11,7 @@ import com.ccx.rpc.core.config.ProtocolConfig;
 import com.ccx.rpc.core.consts.SerializeType;
 import com.ccx.rpc.core.consts.CompressType;
 import com.ccx.rpc.core.consts.MessageType;
+import com.ccx.rpc.core.loadbalance.LoadBalance;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.core.registry.RegistryFactory;
 import com.ccx.rpc.core.remoting.codec.RpcMessageDecoder;
@@ -57,6 +58,8 @@ public class NettyClient {
 
     private final Registry registry;
 
+    private final LoadBalance loadBalance;
+
     private static NettyClient instance = null;
 
     public static NettyClient getInstance() {
@@ -89,7 +92,9 @@ public class NettyClient {
                     }
                 });
         RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
-        registry = registryFactory.getRegistry(ConfigManager.getInstant().getRegistryConfig().toURL());
+        ConfigManager configManager = ConfigManager.getInstant();
+        registry = registryFactory.getRegistry(configManager.getRegistryConfig().toURL());
+        loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(configManager.getClusterConfig().getLoadBalance());
     }
 
     /**
@@ -101,9 +106,10 @@ public class NettyClient {
     public CompletableFuture<RpcResponse<?>> sendRpcRequest(RpcRequest request) {
         Map<String, String> serviceParam = URLBuilder.getServiceParam(request.getInterfaceName(), request.getVersion());
         URL url = URL.builder().protocol(URLKeyConst.CCX_RPC_PROTOCOL).host(URLKeyConst.ANY_HOST).params(serviceParam).build();
+        // 注册中心拿出所有服务的信息
         List<URL> urls = registry.lookup(url);
-        // TODO: 负载
-        URL serverUrl = urls.get(0);
+        // 负载均衡选出一个服务
+        URL serverUrl = loadBalance.select(urls, request);
         InetSocketAddress socketAddress = new InetSocketAddress(serverUrl.getHost(), serverUrl.getPort());
         Channel channel = getChannel(socketAddress);
         if (channel.isActive()) {

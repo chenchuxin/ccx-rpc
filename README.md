@@ -51,7 +51,10 @@ gitee: https://gitee.com/imccx/ccx-rpc
     - [x] JVM 参数配置
     - [ ] Spring 配置文件配置
     - [ ] Apollo 动态配置
-- [ ] 负载均衡
+- [x] 负载均衡
+    - [x] 随机策略
+    - [x] 轮询策略
+    - [ ] 一致性哈希
 - [ ] 集群容错
 - [ ] 优雅停机
 - [ ] 监控后台
