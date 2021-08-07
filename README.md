@@ -8,7 +8,7 @@ github: https://github.com/chenchuxin/ccx-rpc
 
 gitee: https://gitee.com/imccx/ccx-rpc
 
-#### 架构
+#### 目录
 以下是重要的包的简介：
 ```
 |- ccx-rpc-common：基础的代码
@@ -27,6 +27,38 @@ gitee: https://gitee.com/imccx/ccx-rpc
   |- ccx-rpc-demo-client: 客户端，服务引用方
   |- ccx-rpc-demo-service: 服务提供方
 ```
+
+#### 功能列表
+- [x] 自定义 SPI 扩展
+- [x] 注册中心
+    - [x] Zookeeper
+    - [ ] Eureka
+    - [ ] Nacos
+    - [ ] Consul
+    - [ ] ...
+- [x] 序列化
+    - [x] Protostuff
+    - [ ] Kryo
+    - [ ] ...
+- [x] 压缩
+    - [x] gzip
+    - [ ] ...
+- [x] 远程通信
+    - [x] Netty
+    - [ ] Mina
+    - [ ] ...
+- [x] 配置
+    - [x] JVM 参数配置
+    - [ ] Spring 配置文件配置
+    - [ ] Apollo 动态配置
+- [ ] 负载均衡
+- [ ] 集群容错
+- [ ] 优雅停机
+- [ ] 监控后台
+- [ ] 线程模型
+- [ ] 多版本
+- [ ] 服务分组
+- [ ] 过滤器
 
 #### 运行
 1. 环境要求：JDK8 以上
