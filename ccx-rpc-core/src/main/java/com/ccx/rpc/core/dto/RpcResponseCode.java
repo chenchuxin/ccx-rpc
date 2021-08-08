@@ -1,4 +1,4 @@
-package com.ccx.rpc.core.remoting.dto;
+package com.ccx.rpc.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

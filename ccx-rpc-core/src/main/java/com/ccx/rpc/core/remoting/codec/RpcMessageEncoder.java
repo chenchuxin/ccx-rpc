@@ -6,7 +6,7 @@ import com.ccx.rpc.core.consts.SerializeType;
 import com.ccx.rpc.core.consts.CompressType;
 import com.ccx.rpc.core.consts.MessageFormatConst;
 import com.ccx.rpc.core.consts.MessageType;
-import com.ccx.rpc.core.remoting.dto.RpcMessage;
+import com.ccx.rpc.core.dto.RpcMessage;
 import com.ccx.rpc.core.serialize.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

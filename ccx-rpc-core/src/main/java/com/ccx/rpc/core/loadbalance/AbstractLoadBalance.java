@@ -2,7 +2,7 @@ package com.ccx.rpc.core.loadbalance;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.ccx.rpc.common.url.URL;
-import com.ccx.rpc.core.remoting.dto.RpcRequest;
+import com.ccx.rpc.core.dto.RpcRequest;
 
 import java.util.List;
 

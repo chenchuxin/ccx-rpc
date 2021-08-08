@@ -1,4 +1,4 @@
-package com.ccx.rpc.core.remoting.dto;
+package com.ccx.rpc.core.dto;
 
 import com.ccx.rpc.core.consts.CompressType;
 import com.ccx.rpc.core.consts.MessageType;

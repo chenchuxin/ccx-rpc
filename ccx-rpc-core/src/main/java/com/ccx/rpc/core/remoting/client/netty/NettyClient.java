@@ -16,22 +16,19 @@ import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.core.registry.RegistryFactory;
 import com.ccx.rpc.core.remoting.codec.RpcMessageDecoder;
 import com.ccx.rpc.core.remoting.codec.RpcMessageEncoder;
-import com.ccx.rpc.core.remoting.dto.RpcMessage;
-import com.ccx.rpc.core.remoting.dto.RpcRequest;
-import com.ccx.rpc.core.remoting.dto.RpcResponse;
+import com.ccx.rpc.core.dto.RpcMessage;
+import com.ccx.rpc.core.dto.RpcRequest;
+import com.ccx.rpc.core.dto.RpcResponse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
-import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -95,71 +92,6 @@ public class NettyClient {
         ConfigManager configManager = ConfigManager.getInstant();
         registry = registryFactory.getRegistry(configManager.getRegistryConfig().toURL());
         loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(configManager.getClusterConfig().getLoadBalance());
-    }
-
-    /**
-     * 发送 RPC 请求
-     *
-     * @param request 请求数据
-     * @return 响应
-     */
-    public CompletableFuture<RpcResponse<?>> sendRpcRequest(RpcRequest request) {
-        Map<String, String> serviceParam = URLBuilder.getServiceParam(request.getInterfaceName(), request.getVersion());
-        URL url = URL.builder().protocol(URLKeyConst.CCX_RPC_PROTOCOL).host(URLKeyConst.ANY_HOST).params(serviceParam).build();
-        // 注册中心拿出所有服务的信息
-        List<URL> urls = registry.lookup(url);
-        // 负载均衡选出一个服务
-        URL serverUrl = loadBalance.select(urls, request);
-        InetSocketAddress socketAddress = new InetSocketAddress(serverUrl.getHost(), serverUrl.getPort());
-        Channel channel = getChannel(socketAddress);
-        if (channel.isActive()) {
-            CompletableFuture<RpcResponse<?>> resultFuture = new CompletableFuture<>();
-            UnprocessedRequests.put(request.getRequestId(), resultFuture);
-            RpcMessage rpcMessage = buildRpcMessage(request);
-            channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
-                if (future.isSuccess()) {
-                    log.info("client send message: [{}]", rpcMessage);
-                } else {
-                    future.channel().close();
-                    resultFuture.completeExceptionally(future.cause());
-                    log.error("send failed:", future.cause());
-                }
-            });
-            return resultFuture;
-        } else {
-            throw new IllegalStateException("channel is not active. address=" + socketAddress);
-        }
-    }
-
-    /**
-     * 根据请求数据，构建 Rpc 通用信息结构
-     *
-     * @param request 请求
-     * @return RpcMessage
-     */
-    private RpcMessage buildRpcMessage(RpcRequest request) {
-        ProtocolConfig protocolConfig = ConfigManager.getInstant().getProtocolConfig();
-
-        // 压缩类型
-        String compressTypeName = protocolConfig.getCompressType();
-        CompressType compressType = CompressType.fromName(compressTypeName);
-        if (compressType == null) {
-            throw new IllegalStateException("compressType " + compressTypeName + " not support.");
-        }
-
-        // 序列化类型
-        String serializeTypeName = protocolConfig.getSerializeType();
-        SerializeType serializeType = SerializeType.fromName(serializeTypeName);
-        if (serializeType == null) {
-            throw new IllegalStateException("serializeType " + serializeTypeName + " not support.");
-        }
-
-        return RpcMessage.builder()
-                .messageType(MessageType.REQUEST.getValue())
-                .compressTye(compressType.getValue())
-                .serializeType(serializeType.getValue())
-                .data(request)
-                .build();
     }
 
     /**

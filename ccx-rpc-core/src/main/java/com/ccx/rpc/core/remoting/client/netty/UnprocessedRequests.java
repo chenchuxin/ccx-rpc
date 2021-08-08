@@ -1,7 +1,7 @@
 package com.ccx.rpc.core.remoting.client.netty;
 
 import cn.hutool.json.JSONUtil;
-import com.ccx.rpc.core.remoting.dto.RpcResponse;
+import com.ccx.rpc.core.dto.RpcResponse;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

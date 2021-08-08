@@ -18,6 +18,7 @@ gitee: https://gitee.com/imccx/ccx-rpc
   |- annotation：里面包含了一些自定义的注解，例如 @RpcService(服务提供)、@RpcReference(服务引用)
   |- compress: 压缩，网络传输需要压缩数据
   |- config: 定义了一套配置的接口，例如配置服务绑定的端口，zk 的地址等
+  |- faulttolerant: 集群容错，例如快速失败、重试等
   |- loadbalance: 负载均衡，多个服务应该如何选择。有随机策略、轮询策略等
   |- proxy: 代理，用于客户端代理，客户端调用服务接口，实际上是一个网络请求的过程
   |- registry: 注册中心，例如 zk 注册中心

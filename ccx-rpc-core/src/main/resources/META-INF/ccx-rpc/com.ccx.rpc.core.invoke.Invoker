@@ -1,0 +1,1 @@
+netty=com.ccx.rpc.core.invoke.NettyInvoker
