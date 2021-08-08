@@ -4,9 +4,11 @@
 这是一个基于 Netty + Zookeeper + Protostuff 的简易 RPC 框架。
 造轮子主要是为了学习，因为我觉得"会用"、"会读源码"、"会写出来"是完全不一样的水平。
 
-github: https://github.com/chenchuxin/ccx-rpc
+Github: https://github.com/chenchuxin/ccx-rpc
 
-gitee: https://gitee.com/imccx/ccx-rpc
+Gitee: https://gitee.com/imccx/ccx-rpc
+
+更多详细教程请看：https://www.cnblogs.com/chenchuxin/category/2010813.html
 
 #### 目录
 以下是重要的包的简介：
@@ -33,7 +35,7 @@ gitee: https://gitee.com/imccx/ccx-rpc
 #### 功能列表
 - [x] 自定义 SPI 扩展
 - [x] 动态代理
-    - [x] Java Proxy
+    - [x] JDK Proxy
     - [ ] Javassist 生成代码，直接调用
 - [x] 注册中心
     - [x] Zookeeper
