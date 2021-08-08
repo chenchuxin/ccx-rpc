@@ -8,7 +8,7 @@ import com.ccx.rpc.common.extension.SPI;
  * @author chenchuxin
  * @date 2021/7/20
  */
-@SPI
+@SPI("protostuff")
 public interface Serializer {
 
     /**

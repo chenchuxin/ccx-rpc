@@ -24,4 +24,12 @@ public class ProtocolConfig {
      * 压缩类型 {@link CompressType}
      */
     private String compressType;
+
+    public String getSerializeType() {
+        return serializeType != null ? serializeType : SerializeType.PROTOSTUFF.getName();
+    }
+
+    public String getCompressType() {
+        return compressType != null ? compressType : CompressType.GZIP.getName();
+    }
 }

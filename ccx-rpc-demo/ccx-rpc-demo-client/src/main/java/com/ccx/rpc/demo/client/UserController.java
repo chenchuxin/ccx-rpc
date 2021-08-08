@@ -19,8 +19,16 @@ public class UserController {
     @RpcReference
     private UserService userService;
 
+    @RpcReference(version = "v2")
+    private UserService userService2;
+
     @GetMapping("/{uid}")
     public UserInfo getUser(@PathVariable("uid") long uid) {
         return userService.getUser(uid);
+    }
+
+    @GetMapping("/v2/{uid}")
+    public UserInfo getUserV2(@PathVariable("uid") long uid) {
+        return userService2.getUser(uid);
     }
 }

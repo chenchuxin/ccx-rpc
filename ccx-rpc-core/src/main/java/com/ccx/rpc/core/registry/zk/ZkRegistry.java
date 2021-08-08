@@ -32,7 +32,7 @@ public class ZkRegistry extends AbstractRegistry {
 
     @Override
     public void doRegister(URL url) {
-        zkClient.createPersistentNode(toUrlPath(url, true));
+        zkClient.createEphemeralNode(toUrlPath(url, true));
     }
 
     @Override

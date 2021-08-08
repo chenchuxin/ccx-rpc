@@ -14,10 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @RpcScan(basePackages = {"com.ccx.rpc.demo.client"})
 public class ClientBootstrap {
 
+    // jvm 参数：-Dregistry.address=zk://localhost:2181
     public static void main(String[] args) {
-        System.setProperty("registry.address", "zk://localhost:2181");
-        System.setProperty("protocol.serializeType", "protostuff");
-        System.setProperty("protocol.compressType", "gzip");
         SpringApplication.run(ClientBootstrap.class, args);
     }
 

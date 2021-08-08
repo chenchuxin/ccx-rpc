@@ -69,7 +69,7 @@ public class CuratorZkClient {
         try {
             client.blockUntilConnected(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            throw new RuntimeException("Time out waiting to connect to ZK!");
+            throw new RuntimeException("Time out waiting to connect to zookeeper! Please check the zookeeper config.");
         }
     }
 
@@ -96,6 +96,15 @@ public class CuratorZkClient {
      */
     public void createPersistentNode(String path) {
         createNode(path, CreateMode.PERSISTENT);
+    }
+
+    /**
+     * 创建临时节点
+     *
+     * @param path 路径，如果没有加上根目录，会自动加上根目录
+     */
+    public void createEphemeralNode(String path) {
+        createNode(path, CreateMode.EPHEMERAL);
     }
 
     /**

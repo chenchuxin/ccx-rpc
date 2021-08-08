@@ -59,7 +59,7 @@ public class RpcClientProxy implements InvocationHandler {
         FaultTolerantInvoker invoker = ExtensionLoader.getExtensionLoader(FaultTolerantInvoker.class)
                 .getExtension(ConfigManager.getInstant().getClusterConfig().getFaultTolerant());
         RpcResult rpcResult = invoker.invoke(request);
-        return rpcResult.getData();
+        return ((RpcResponse<?>) rpcResult.getData()).getData();
     }
 
 }

@@ -7,6 +7,7 @@ import com.ccx.rpc.core.annotation.Config;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * java 参数配置 -Dprefix.configField=xxx
@@ -30,6 +31,10 @@ public class SystemPropertyLoader implements ConfigLoader {
         try {
             T configObject = clazz.newInstance();
             for (Field field : clazz.getDeclaredFields()) {
+                // 忽略掉静态的
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
                 String property = System.getProperty(prefix + "." + field.getName());
                 if (property == null) {
                     continue;

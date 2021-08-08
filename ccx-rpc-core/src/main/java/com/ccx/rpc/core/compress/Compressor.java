@@ -8,7 +8,7 @@ import com.ccx.rpc.common.extension.SPI;
  * @author chenchuxin
  * @date 2021/7/24
  */
-@SPI
+@SPI("gzip")
 public interface Compressor {
 
     /**

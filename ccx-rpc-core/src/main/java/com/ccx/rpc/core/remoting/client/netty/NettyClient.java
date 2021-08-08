@@ -53,10 +53,6 @@ public class NettyClient {
      */
     private static final Map<SocketAddress, Channel> CHANNEL_MAP = new ConcurrentHashMap<>();
 
-    private final Registry registry;
-
-    private final LoadBalance loadBalance;
-
     private static NettyClient instance = null;
 
     public static NettyClient getInstance() {
@@ -88,10 +84,6 @@ public class NettyClient {
                         p.addLast(new NettyClientHandler());
                     }
                 });
-        RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
-        ConfigManager configManager = ConfigManager.getInstant();
-        registry = registryFactory.getRegistry(configManager.getRegistryConfig().toURL());
-        loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(configManager.getClusterConfig().getLoadBalance());
     }
 
     /**
@@ -123,10 +115,10 @@ public class NettyClient {
                 if (future.isSuccess()) {
                     completableFuture.complete(future.channel());
                 } else {
-                    throw new IllegalStateException(StrUtil.format("connect fail. address", address));
+                    throw new IllegalStateException(StrUtil.format("connect fail. address:", address));
                 }
             });
-            return completableFuture.get();
+            return completableFuture.get(10, TimeUnit.SECONDS);
         } catch (Exception ex) {
             throw new RpcException(address + " connect fail.", ex);
         }
