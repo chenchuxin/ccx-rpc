@@ -9,6 +9,6 @@ import com.ccx.rpc.core.invoke.Invoker;
  * @author chenchuxin
  * @date 2021/8/8
  */
-@SPI("retry")
+@SPI("fail-fast")
 public interface FaultTolerantInvoker extends Invoker {
 }
