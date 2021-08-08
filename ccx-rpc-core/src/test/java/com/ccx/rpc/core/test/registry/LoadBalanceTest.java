@@ -4,8 +4,6 @@ import cn.hutool.core.collection.ListUtil;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.core.loadbalance.LoadBalance;
-import com.ccx.rpc.core.loadbalance.RandomLoadBalance;
-import com.ccx.rpc.core.loadbalance.RoundRobinLoadBalance;
 import com.ccx.rpc.core.dto.RpcRequest;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,8 +19,8 @@ import java.util.Map;
  * @date 2021/8/7
  */
 public class LoadBalanceTest {
-    private static final LoadBalance RANDOM_LOAD_BALANCE = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("random");
-    private static final LoadBalance ROUND_ROBIN_LOAD_BALANCE = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("round-robin");
+    private static final LoadBalance RANDOM_LOAD_BALANCE = ExtensionLoader.getLoader(LoadBalance.class).getExtension("random");
+    private static final LoadBalance ROUND_ROBIN_LOAD_BALANCE = ExtensionLoader.getLoader(LoadBalance.class).getExtension("round-robin");
     private static final List<URL> candidateUrls = ListUtil.toList(
             URL.valueOf("zk://127.0.0.1:1000"),
             URL.valueOf("zk://127.0.0.1:2000"),

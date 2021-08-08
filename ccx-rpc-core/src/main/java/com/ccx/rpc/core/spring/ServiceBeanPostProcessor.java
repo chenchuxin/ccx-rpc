@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 实例化时。
@@ -40,7 +39,7 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
         RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
         // rpc 服务需要发布到注册中心
         if (rpcService != null) {
-            RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
+            RegistryFactory registryFactory = ExtensionLoader.getLoader(RegistryFactory.class).getAdaptiveExtension();
             RegistryConfig registryConfig = ConfigManager.getInstant().getRegistryConfig();
             Registry registry = registryFactory.getRegistry(registryConfig.toURL());
             registry.register(buildServiceURL(bean, rpcService));

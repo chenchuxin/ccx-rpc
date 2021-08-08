@@ -76,7 +76,7 @@ public class ExtensionLoader<T> {
      * @param type 扩展类加载器的类型
      * @return 扩展类加载器实例
      */
-    public static <S> ExtensionLoader<S> getExtensionLoader(Class<S> type) {
+    public static <S> ExtensionLoader<S> getLoader(Class<S> type) {
         // 扩展类型必须是接口
         if (!type.isInterface()) {
             throw new IllegalStateException(type.getName() + " is not interface");

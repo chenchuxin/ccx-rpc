@@ -23,9 +23,9 @@ import java.util.Map;
  */
 public abstract class AbstractInvoker implements Invoker {
 
-    private final RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
+    private final RegistryFactory registryFactory = ExtensionLoader.getLoader(RegistryFactory.class).getAdaptiveExtension();
     private final Registry registry = registryFactory.getRegistry(ConfigManager.getInstant().getRegistryConfig().toURL());
-    private final LoadBalance loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class)
+    private final LoadBalance loadBalance = ExtensionLoader.getLoader(LoadBalance.class)
             .getExtension(ConfigManager.getInstant().getClusterConfig().getLoadBalance());
 
     @Override

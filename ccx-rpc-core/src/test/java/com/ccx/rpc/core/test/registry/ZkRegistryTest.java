@@ -37,7 +37,7 @@ public class ZkRegistryTest {
         zkServer = new TestingServer(port, true);
         zkServer.start();
         URL url = URLParser.toURL("zk://localhost:" + port);
-        RegistryFactory zkRegistryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
+        RegistryFactory zkRegistryFactory = ExtensionLoader.getLoader(RegistryFactory.class).getAdaptiveExtension();
         registry = zkRegistryFactory.getRegistry(url);
     }
 

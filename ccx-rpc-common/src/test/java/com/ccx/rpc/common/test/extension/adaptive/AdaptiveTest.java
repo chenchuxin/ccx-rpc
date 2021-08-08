@@ -13,7 +13,7 @@ public class AdaptiveTest {
 
     @Test
     public void getAdaptiveExtendTest() {
-        ExtensionLoader<ExtFactory> extensionLoader = ExtensionLoader.getExtensionLoader(ExtFactory.class);
+        ExtensionLoader<ExtFactory> extensionLoader = ExtensionLoader.getLoader(ExtFactory.class);
         ExtFactory extFactory = extensionLoader.getAdaptiveExtension();
         Ext ext = extFactory.getExt(URL.valueOf("ext2://localhost:123"));
         Assert.assertTrue(ext instanceof ExtImpl2);

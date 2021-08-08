@@ -48,7 +48,7 @@ public class AdaptiveInvocationHandler<T> implements InvocationHandler {
             extendName = url.getParam(extendNameKey, method.getDeclaringClass() + "." + method.getName());
         }
 
-        ExtensionLoader<T> extensionLoader = ExtensionLoader.getExtensionLoader(clazz);
+        ExtensionLoader<T> extensionLoader = ExtensionLoader.getLoader(clazz);
         T extension = extensionLoader.getExtension(extendName);
         return method.invoke(extension, args);
     }

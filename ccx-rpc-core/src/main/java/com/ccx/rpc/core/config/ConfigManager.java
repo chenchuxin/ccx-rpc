@@ -19,7 +19,7 @@ public class ConfigManager {
     private Map<Class, Object> configCache = new ConcurrentHashMap<>();
 
     private ConfigManager() {
-        configLoader = ExtensionLoader.getExtensionLoader(ConfigLoader.class).getExtension("system-property");
+        configLoader = ExtensionLoader.getLoader(ConfigLoader.class).getExtension("system-property");
     }
 
     private static final ConfigManager instant = new ConfigManager();

@@ -14,38 +14,38 @@ public class ExtensionLoaderTest {
 
     @Test
     public void getExtensionLoaderTest() {
-        ExtensionLoader<?> extensionLoader = ExtensionLoader.getExtensionLoader(Extension.class);
+        ExtensionLoader<?> extensionLoader = ExtensionLoader.getLoader(Extension.class);
         Assert.assertNotNull(extensionLoader);
     }
 
     @Test
     public void getExtensionTest() {
-        ExtensionLoader<?> extensionLoader = ExtensionLoader.getExtensionLoader(Extension.class);
+        ExtensionLoader<?> extensionLoader = ExtensionLoader.getLoader(Extension.class);
         Extension extension = (Extension) extensionLoader.getExtension("other");
         Assert.assertTrue(extension instanceof OtherExtension);
     }
 
     @Test
     public void getDefaultExtensionTest() {
-        ExtensionLoader<?> extensionLoader = ExtensionLoader.getExtensionLoader(Extension.class);
+        ExtensionLoader<?> extensionLoader = ExtensionLoader.getLoader(Extension.class);
         Object extension = extensionLoader.getDefaultExtension();
         Assert.assertTrue(extension instanceof DefaultExtension);
     }
 
     @Test(expected = IllegalStateException.class)
     public void notInterfaceExtensionLoaderTest() {
-        ExtensionLoader.getExtensionLoader(ExtensionNotInterface.class);
+        ExtensionLoader.getLoader(ExtensionNotInterface.class);
     }
 
     @Test(expected = IllegalStateException.class)
     public void notDefaultExtensionLoaderTest() {
-        ExtensionLoader<?> extensionLoader = ExtensionLoader.getExtensionLoader(ExtensionNotDefault.class);
+        ExtensionLoader<?> extensionLoader = ExtensionLoader.getLoader(ExtensionNotDefault.class);
         extensionLoader.getDefaultExtension();
     }
 
     @Test(expected = IllegalStateException.class)
     public void notFileExtensionLoaderTest() {
-        ExtensionLoader<?> extensionLoader = ExtensionLoader.getExtensionLoader(ExtensionNotFile.class);
+        ExtensionLoader<?> extensionLoader = ExtensionLoader.getLoader(ExtensionNotFile.class);
         extensionLoader.getDefaultExtension();
     }
 }

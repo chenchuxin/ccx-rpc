@@ -27,11 +27,11 @@ public abstract class AbstractFaultTolerantInvoker implements FaultTolerantInvok
 
     protected final ClusterConfig clusterConfig = ConfigManager.getInstant().getClusterConfig();
 
-    private final RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader(RegistryFactory.class).getAdaptiveExtension();
+    private final RegistryFactory registryFactory = ExtensionLoader.getLoader(RegistryFactory.class).getAdaptiveExtension();
     private final Registry registry = registryFactory.getRegistry(ConfigManager.getInstant().getRegistryConfig().toURL());
-    private final LoadBalance loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class)
+    private final LoadBalance loadBalance = ExtensionLoader.getLoader(LoadBalance.class)
             .getExtension(ConfigManager.getInstant().getClusterConfig().getLoadBalance());
-    private final Invoker invoker = ExtensionLoader.getExtensionLoader(Invoker.class).getDefaultExtension();
+    private final Invoker invoker = ExtensionLoader.getLoader(Invoker.class).getDefaultExtension();
 
     @Override
     public RpcResult invoke(RpcRequest request) throws RpcException {

@@ -115,7 +115,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (compressType == null) {
             throw new IllegalArgumentException("unknown compress type:" + compress);
         }
-        Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(compressType.getName());
+        Compressor compressor = ExtensionLoader.getLoader(Compressor.class).getExtension(compressType.getName());
         byte[] decompressedBytes = compressor.decompress(bodyBytes);
 
         // 反序列化
@@ -123,7 +123,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (serializeType == null) {
             throw new IllegalArgumentException("unknown codec type:" + codec);
         }
-        Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeType.getName());
+        Serializer serializer = ExtensionLoader.getLoader(Serializer.class).getExtension(serializeType.getName());
         Class<?> clazz = messageType == MessageType.REQUEST.getValue() ? RpcRequest.class : RpcResponse.class;
         Object object = serializer.deserialize(decompressedBytes, clazz);
         rpcMessage.setData(object);

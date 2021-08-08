@@ -6,8 +6,6 @@ import com.ccx.rpc.core.annotation.RpcReference;
 import com.ccx.rpc.core.config.ConfigManager;
 import com.ccx.rpc.core.dto.RpcResult;
 import com.ccx.rpc.core.faulttolerant.FaultTolerantInvoker;
-import com.ccx.rpc.core.invoke.Invoker;
-import com.ccx.rpc.core.remoting.client.netty.NettyClient;
 import com.ccx.rpc.core.dto.RpcRequest;
 import com.ccx.rpc.core.dto.RpcResponse;
 import lombok.SneakyThrows;
@@ -15,7 +13,6 @@ import lombok.SneakyThrows;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Rpc 调用方的代理
@@ -56,7 +53,7 @@ public class RpcClientProxy implements InvocationHandler {
                 .requestId(UUID.fastUUID().toString())
                 .version(rpcReference.version())
                 .build();
-        FaultTolerantInvoker invoker = ExtensionLoader.getExtensionLoader(FaultTolerantInvoker.class)
+        FaultTolerantInvoker invoker = ExtensionLoader.getLoader(FaultTolerantInvoker.class)
                 .getExtension(ConfigManager.getInstant().getClusterConfig().getFaultTolerant());
         RpcResult rpcResult = invoker.invoke(request);
         return ((RpcResponse<?>) rpcResult.getData()).getData();
