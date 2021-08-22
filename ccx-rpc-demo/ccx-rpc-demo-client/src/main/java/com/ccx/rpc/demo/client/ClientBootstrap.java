@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @RpcScan(basePackages = {"com.ccx.rpc.demo.client"})
 public class ClientBootstrap {
 
-    // jvm 参数：-Dregistry.address=zk://localhost:2181
     public static void main(String[] args) {
         SpringApplication.run(ClientBootstrap.class, args);
     }

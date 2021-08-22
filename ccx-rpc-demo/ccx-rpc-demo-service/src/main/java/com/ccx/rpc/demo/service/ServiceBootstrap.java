@@ -15,7 +15,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 @RpcScan(basePackages = {"com.ccx.rpc.demo.service"})
 public class ServiceBootstrap {
 
-    // jvm 参数：-Dregistry.address=zk://localhost:2181 -Dservice.port=5525
     public static void main(String[] args) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(ServiceBootstrap.class);
         NettyServerBootstrap serverBootstrap = (NettyServerBootstrap) applicationContext.getBean("nettyServerBootstrap");

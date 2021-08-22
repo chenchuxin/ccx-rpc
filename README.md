@@ -74,8 +74,8 @@ Gitee: https://gitee.com/imccx/ccx-rpc
 #### 运行
 1. 环境要求：JDK8 以上、Lombok 插件
 2. 需要安装 `Zookeeper` 并运行
-3. 配置JVM参数：`-Dregistry.address=zk://localhost:2181 -Dservice.port=5525`，启动服务 `com.ccx.rpc.demo.service.ServiceBootstrap`
-4. 配置JVM参数：`-Dregistry.address=zk://localhost:2181`，启动客户端 `com.ccx.rpc.demo.client.ClientBootstrap`
+3. 修改配置文件 `ccx-rpc.properties` 中的 zk 地址、监听端口，启动服务 `com.ccx.rpc.demo.service.ServiceBootstrap`
+4. 修改配置文件 `ccx-rpc.properties` 中的 zk 地址，启动客户端 `com.ccx.rpc.demo.client.ClientBootstrap`
 5. 访问客户端地址 `http://localhost:8864/user/1` 就可以啦. `http://localhost:8864/user/v2/1` 可以访问另一个实现，这是多版本功能。
 
 #### 参与贡献
