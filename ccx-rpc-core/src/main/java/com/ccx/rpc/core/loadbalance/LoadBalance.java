@@ -12,7 +12,7 @@ import java.util.List;
  * @author chenchuxin
  * @date 2021/8/7
  */
-@SPI("random")
+@SPI("round-robin")
 public interface LoadBalance {
 
     /**

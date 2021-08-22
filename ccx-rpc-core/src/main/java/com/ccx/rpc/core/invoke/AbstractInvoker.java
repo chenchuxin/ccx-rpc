@@ -1,5 +1,6 @@
 package com.ccx.rpc.core.invoke;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.ccx.rpc.common.consts.RpcException;
 import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.extension.ExtensionLoader;
@@ -12,6 +13,7 @@ import com.ccx.rpc.core.loadbalance.LoadBalance;
 import com.ccx.rpc.core.registry.Registry;
 import com.ccx.rpc.core.registry.RegistryFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,9 @@ public abstract class AbstractInvoker implements Invoker {
         URL url = URL.builder().protocol(URLKeyConst.CCX_RPC_PROTOCOL).host(URLKeyConst.ANY_HOST).params(serviceParam).build();
         // 注册中心拿出所有服务的信息
         List<URL> urls = registry.lookup(url);
+        if (CollectionUtil.isEmpty(urls)) {
+            throw new RpcException("Not service Providers registered." + serviceParam);
+        }
         URL selected = loadBalance.select(urls, request);
         return doInvoke(request, selected);
     }

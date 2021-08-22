@@ -33,4 +33,9 @@ public interface Registry {
      * @return 符合查询条件的所有注册者
      */
     List<URL> lookup(URL condition);
+
+    /**
+     * 取消所有本机的服务，用于关机的时候
+     */
+    void unregisterAllMyService();
 }

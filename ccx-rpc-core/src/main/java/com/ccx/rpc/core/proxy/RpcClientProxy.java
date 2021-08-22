@@ -53,8 +53,8 @@ public class RpcClientProxy implements InvocationHandler {
                 .requestId(UUID.fastUUID().toString())
                 .version(rpcReference.version())
                 .build();
-        FaultTolerantInvoker invoker = ExtensionLoader.getLoader(FaultTolerantInvoker.class)
-                .getExtension(ConfigManager.getInstant().getClusterConfig().getFaultTolerant());
+        ExtensionLoader<FaultTolerantInvoker> loader = ExtensionLoader.getLoader(FaultTolerantInvoker.class);
+        FaultTolerantInvoker invoker = loader.getExtension(ConfigManager.getInstant().getClusterConfig().getFaultTolerant());
         RpcResult rpcResult = invoker.invoke(request);
         return ((RpcResponse<?>) rpcResult.getData()).getData();
     }

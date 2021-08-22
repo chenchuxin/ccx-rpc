@@ -2,21 +2,36 @@ package com.ccx.rpc.core.registry;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.lang.Assert;
+import com.ccx.rpc.common.consts.URLKeyConst;
 import com.ccx.rpc.common.url.URL;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static com.ccx.rpc.core.registry.RegistryEvent.Type.*;
 
 /**
+ * 抽象的注册中心
+ *
  * @author chenchuxin
  * @date 2021/7/24
  */
 @Slf4j
 public abstract class AbstractRegistry implements Registry {
 
-    private final Set<URL> registered = new ConcurrentHashSet<>();
+    /**
+     * {serviceName: [URL]}
+     */
+    private final Map<String, Set<String>> registered = new ConcurrentHashMap<>();
+
+    /**
+     * 本机注册的服务
+     */
+    private static final Set<URL> myServiceURLs = new ConcurrentHashSet<>();
 
     /**
      * 向注册中心注册服务
@@ -41,15 +56,6 @@ public abstract class AbstractRegistry implements Registry {
     protected abstract List<URL> doLookup(URL condition);
 
     /**
-     * 获取本机注册的所有 URL
-     *
-     * @return 不可修改的 Set
-     */
-    public Set<URL> getRegistered() {
-        return Collections.unmodifiableSet(registered);
-    }
-
-    /**
      * 向注册中心注册服务
      *
      * @param url 注册者的信息
@@ -58,7 +64,8 @@ public abstract class AbstractRegistry implements Registry {
     public void register(URL url) {
         Assert.notNull(url, "register url == null");
         doRegister(url);
-        registered.add(url);
+        addToLocalCache(url);
+        myServiceURLs.add(url);
         log.info("register: {}", url);
     }
 
@@ -71,20 +78,112 @@ public abstract class AbstractRegistry implements Registry {
     public void unregister(URL url) {
         Assert.notNull(url, "register url == null");
         doUnregister(url);
-        registered.remove(url);
+        removeFromLocalCache(url);
+        myServiceURLs.remove(url);
         log.info("unregister: {}", url);
     }
 
     /**
      * 查找注册的服务
      *
-     * @param condition 查询条件
+     * @param condition 查询条件，包含接口类型
      * @return 符合查询条件的所有注册者
      */
     @Override
     public List<URL> lookup(URL condition) {
-        List<URL> urls = doLookup(condition);
+        String serviceName = getServiceNameFromUrl(condition);
+        if (registered.containsKey(serviceName)) {
+            return registered.get(serviceName).stream().map(URL::valueOf).collect(Collectors.toList());
+        }
+        List<URL> urls = reset(condition);
         log.info("lookup: {}", urls);
         return urls;
+    }
+
+    /**
+     * 取消所有本机的服务，用于关机的时候
+     */
+    @Override
+    public void unregisterAllMyService() {
+        log.info("unregisterAllMyService. myServiceURLs:{}", myServiceURLs);
+        for (URL url : myServiceURLs) {
+            unregister(url);
+        }
+    }
+
+    /**
+     * 重置。真实拿出注册信息，然后加到缓存中。
+     *
+     * @param condition
+     * @return
+     */
+    public List<URL> reset(URL condition) {
+        String serviceName = getServiceNameFromUrl(condition);
+        registered.remove(serviceName);
+        List<URL> urls = doLookup(condition);
+        for (URL url : urls) {
+            addToLocalCache(url);
+        }
+        log.info("reset: {}", urls);
+        return urls;
+    }
+
+    /**
+     * 触发事件
+     *
+     * @param event 事件
+     */
+    public final void triggerEvent(RegistryEvent event) {
+        RegistryEvent.Type type = event.getType();
+        String data = event.getData();
+        String oldData = event.getOldData();
+        log.info("triggerEvent. event={}", event);
+        if (type == CREATED) {
+            // 新增节点
+            if (data != null) {
+                addToLocalCache(URL.valueOf(data));
+            }
+        } else if (type == DELETED) {
+            if (oldData != null) {
+                // 删除节点
+                removeFromLocalCache(URL.valueOf(oldData));
+            }
+        } else if (type == CHANGED) {
+            // 修改节点
+            if (oldData != null) {
+                removeFromLocalCache(URL.valueOf(oldData));
+            }
+            if (data != null) {
+                addToLocalCache(URL.valueOf(data));
+            }
+        }
+    }
+
+    /**
+     * 从 URL 中获取服务名
+     */
+    public String getServiceNameFromUrl(URL url) {
+        return url.getParam(URLKeyConst.INTERFACE, url.getPath());
+    }
+
+    /**
+     * 添加到本地缓存
+     */
+    private void addToLocalCache(URL url) {
+        String serviceName = getServiceNameFromUrl(url);
+        if (!registered.containsKey(serviceName)) {
+            registered.put(serviceName, new ConcurrentHashSet<>());
+        }
+        registered.get(serviceName).add(url.toFullString());
+    }
+
+    /**
+     * 从本地缓存中删除
+     */
+    private void removeFromLocalCache(URL url) {
+        String serviceName = getServiceNameFromUrl(url);
+        if (registered.containsKey(serviceName)) {
+            registered.get(serviceName).remove(url.toFullString());
+        }
     }
 }

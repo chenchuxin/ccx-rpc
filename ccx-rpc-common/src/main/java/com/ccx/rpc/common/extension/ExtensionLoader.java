@@ -61,13 +61,15 @@ public class ExtensionLoader<T> {
     /**
      * 默认扩展名缓存
      */
-    private static String defaultNameCache;
+    private final String defaultNameCache;
 
     /**
      * @param type 扩展类加载器的类型
      */
     private ExtensionLoader(Class<T> type) {
         this.type = type;
+        SPI annotation = type.getAnnotation(SPI.class);
+        defaultNameCache = annotation.value();
     }
 
     /**
@@ -85,7 +87,6 @@ public class ExtensionLoader<T> {
         if (annotation == null) {
             throw new IllegalStateException(type.getName() + " has not @SPI annotation.");
         }
-        defaultNameCache = annotation.value();
         ExtensionLoader<?> extensionLoader = extensionLoaderCache.get(type);
         if (extensionLoader != null) {
             //noinspection unchecked

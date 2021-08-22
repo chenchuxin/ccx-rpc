@@ -1,17 +1,21 @@
 package com.ccx.rpc.core.registry.zk;
 
-import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.common.consts.URLKeyConst;
+import com.ccx.rpc.common.url.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.CuratorCache;
+import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,6 +54,10 @@ public class CuratorZkClient {
      * zk 客户端
      */
     private final CuratorFramework client;
+    /**
+     * 监听器 {path: 监听器}
+     */
+    private static final Map<String, CuratorCache> LISTENER_MAP = new ConcurrentHashMap<>();
 
     public CuratorZkClient(URL url) {
         int timeout = url.getIntParam(URLKeyConst.TIMEOUT, DEFAULT_CONNECTION_TIMEOUT_MS);
@@ -83,7 +91,7 @@ public class CuratorZkClient {
         try {
             client.create().creatingParentsIfNeeded().withMode(createMode).forPath(buildPath(path));
         } catch (KeeperException.NodeExistsException e) {
-            log.warn("ZNode " + path + " already exists.", e);
+            log.warn("ZNode " + path + " already exists.");
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -135,6 +143,23 @@ public class CuratorZkClient {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * 添加监听者
+     *
+     * @param path     相对路径
+     * @param listener 监听者
+     */
+    public void addListener(String path, CuratorCacheListener listener) {
+        String fullPath = buildPath(path);
+        if (LISTENER_MAP.containsKey(fullPath)) {
+            return;
+        }
+        CuratorCache curatorCache = CuratorCache.build(client, fullPath);
+        LISTENER_MAP.put(fullPath, curatorCache);
+        curatorCache.listenable().addListener(listener);
+        curatorCache.start();
     }
 
     /**

@@ -1,14 +1,12 @@
 package com.ccx.rpc.core.faulttolerant;
 
 import com.ccx.rpc.common.consts.RpcException;
-import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.core.dto.RpcRequest;
 import com.ccx.rpc.core.dto.RpcResult;
 import com.ccx.rpc.core.invoke.Invoker;
 import com.ccx.rpc.core.loadbalance.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,7 +24,7 @@ public class RetryInvoker extends AbstractFaultTolerantInvoker {
     private static final Integer DEFAULT_RETRY_TIMES = 3;
 
     @Override
-    protected RpcResult doInvoke(RpcRequest request, Invoker invoker, List<URL> candidateUrls, LoadBalance loadBalance) throws RpcException {
+    protected RpcResult doInvoke(RpcRequest request, Invoker invoker, LoadBalance loadBalance) throws RpcException {
         int retryTimes = Optional.ofNullable(clusterConfig.getRetryTimes()).orElse(DEFAULT_RETRY_TIMES);
         RpcException rpcException = null;
         for (int i = 0; i < retryTimes; i++) {
