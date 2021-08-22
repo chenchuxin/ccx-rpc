@@ -138,7 +138,7 @@ public class ExtensionLoader<T> {
      * @return 动态代理自适应类
      */
     public T getAdaptiveExtension() {
-        InvocationHandler handler = new AdaptiveInvocationHandler<T>(type);
+        InvocationHandler handler = new AdaptiveInvocationHandler<>(type);
         //noinspection unchecked
         return (T) Proxy.newProxyInstance(ExtensionLoader.class.getClassLoader(),
                 new Class<?>[]{type}, handler);

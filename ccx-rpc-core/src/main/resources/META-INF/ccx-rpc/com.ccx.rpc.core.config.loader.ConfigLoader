@@ -1,1 +1,2 @@
 system-property=com.ccx.rpc.core.config.loader.SystemPropertyLoader
+properties=com.ccx.rpc.core.config.loader.PropertiesConfigLoader
