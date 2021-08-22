@@ -55,7 +55,7 @@ Gitee: https://gitee.com/imccx/ccx-rpc
     - [x] 使用 Netty 框架
 - [x] 配置
     - [x] JVM 参数配置
-    - [ ] Spring 配置文件配置
+    - [x] properties 文件配置
     - [ ] Apollo 动态配置
 - [x] 负载均衡
     - [x] 随机策略

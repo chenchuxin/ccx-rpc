@@ -64,6 +64,8 @@ public class ExtensionLoader<T> {
     private final String defaultNameCache;
 
     /**
+     * 构造函数
+     *
      * @param type 扩展类加载器的类型
      */
     private ExtensionLoader(Class<T> type) {
