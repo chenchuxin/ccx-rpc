@@ -112,9 +112,6 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         in.readBytes(bodyBytes);
         // 解压
         CompressType compressType = CompressType.fromValue(compress);
-        if (compressType == null) {
-            throw new IllegalArgumentException("unknown compress type:" + compress);
-        }
         Compressor compressor = ExtensionLoader.getLoader(Compressor.class).getExtension(compressType.getName());
         byte[] decompressedBytes = compressor.decompress(bodyBytes);
 

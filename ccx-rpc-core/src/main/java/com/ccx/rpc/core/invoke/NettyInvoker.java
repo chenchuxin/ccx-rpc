@@ -63,9 +63,6 @@ public class NettyInvoker extends AbstractInvoker {
         // 压缩类型
         String compressTypeName = protocolConfig.getCompressType();
         CompressType compressType = CompressType.fromName(compressTypeName);
-        if (compressType == null) {
-            throw new IllegalStateException("compressType " + compressTypeName + " not support.");
-        }
 
         // 序列化类型
         String serializeTypeName = protocolConfig.getSerializeType();

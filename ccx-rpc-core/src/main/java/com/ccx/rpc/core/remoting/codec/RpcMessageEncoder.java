@@ -91,9 +91,6 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
 
         // 压缩器
         CompressType compressType = CompressType.fromValue(rpcMessage.getCompressTye());
-        if (compressType == null) {
-            throw new IllegalArgumentException("compressor type not found");
-        }
         Compressor compressor = ExtensionLoader.getLoader(Compressor.class).getExtension(compressType.getName());
 
         // 序列化

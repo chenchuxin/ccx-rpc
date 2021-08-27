@@ -24,7 +24,7 @@ import static com.ccx.rpc.core.registry.RegistryEvent.Type.*;
 public abstract class AbstractRegistry implements Registry {
 
     /**
-     * {serviceName: [URL]}
+     * 已注册的服务的本地缓存。{serviceName: [URL]}
      */
     private final Map<String, Set<String>> registered = new ConcurrentHashMap<>();
 
@@ -118,10 +118,14 @@ public abstract class AbstractRegistry implements Registry {
      * @return
      */
     public List<URL> reset(URL condition) {
+        // 获取服务名
         String serviceName = getServiceNameFromUrl(condition);
+        // 将原来注册信息本地缓存删掉
         registered.remove(serviceName);
+        // 重新从注册中心获取
         List<URL> urls = doLookup(condition);
         for (URL url : urls) {
+            // 将所有 Provider 添加到本地缓存
             addToLocalCache(url);
         }
         log.info("reset: {}", urls);

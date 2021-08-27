@@ -43,11 +43,10 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcMessage> 
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.WRITER_IDLE) {
                 log.info("write idle happen [{}]", ctx.channel().remoteAddress());
-                // TODO ccx 这里不知道对不对，跟 guide-rpc 不一样
                 Channel channel = ctx.channel();
                 RpcMessage rpcMessage = new RpcMessage();
                 rpcMessage.setSerializeType(SerializeType.PROTOSTUFF.getValue());
-                rpcMessage.setCompressTye(CompressType.GZIP.getValue());
+                rpcMessage.setCompressTye(CompressType.DUMMY.getValue());
                 rpcMessage.setMessageType(MessageType.HEARTBEAT_PING.getValue());
                 rpcMessage.setData(MessageFormatConst.PING_DATA);
                 channel.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);

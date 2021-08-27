@@ -1,4 +1,4 @@
-package com.ccx.rpc.core.compress.gzip;
+package com.ccx.rpc.core.compress;
 
 import cn.hutool.core.lang.Assert;
 import com.ccx.rpc.core.compress.Compressor;
@@ -6,6 +6,7 @@ import com.ccx.rpc.core.compress.Compressor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 

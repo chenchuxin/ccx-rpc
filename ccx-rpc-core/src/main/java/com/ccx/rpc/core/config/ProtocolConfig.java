@@ -30,6 +30,6 @@ public class ProtocolConfig {
     }
 
     public String getCompressType() {
-        return compressType != null ? compressType : CompressType.GZIP.getName();
+        return compressType != null ? compressType : CompressType.DUMMY.getName();
     }
 }
