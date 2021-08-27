@@ -46,15 +46,17 @@ public class NettyServerBootstrap {
             ServerBootstrap bootstrap = new ServerBootstrap()
                     .group(bossGroup, workerGroup)
                     .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                    // 系统用于临时存放已完成三次握手的请求的队列的最大长度。如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    // 程序进程非正常退出，内核需要一定的时间才能够释放此端口，不设置 SO_REUSEADDR 就无法正常使用该端口。
+                    .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
                     // TCP/IP协议中针对TCP默认开启了Nagle 算法。
                     // Nagle 算法通过减少需要传输的数据包，来优化网络。在内核实现中，数据包的发送和接受会先做缓存，分别对应于写缓存和读缓存。
                     // 启动 TCP_NODELAY，就意味着禁用了 Nagle 算法，允许小包的发送。
                     // 对于延时敏感型，同时数据传输量比较小的应用，开启TCP_NODELAY选项无疑是一个正确的选择
-                    .childOption(ChannelOption.TCP_NODELAY, true)
+                    .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
                     // 是否开启 TCP 底层心跳机制
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    // 系统用于临时存放已完成三次握手的请求的队列的最大长度。如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数
-                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override

@@ -54,6 +54,8 @@ public class NettyClient {
                 .group(new NioEventLoopGroup())
                 .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
+                .option(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
+                .option(ChannelOption.TCP_NODELAY, Boolean.TRUE)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override

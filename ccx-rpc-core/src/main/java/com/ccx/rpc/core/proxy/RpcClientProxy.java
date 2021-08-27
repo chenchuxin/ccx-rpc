@@ -3,7 +3,6 @@ package com.ccx.rpc.core.proxy;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.core.annotation.RpcReference;
 import com.ccx.rpc.core.config.ConfigManager;
-import com.ccx.rpc.core.consts.MessageFormatConst;
 import com.ccx.rpc.core.dto.RpcRequest;
 import com.ccx.rpc.core.dto.RpcResponse;
 import com.ccx.rpc.core.dto.RpcResult;
