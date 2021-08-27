@@ -1,13 +1,13 @@
 package com.ccx.rpc.core.proxy;
 
-import cn.hutool.core.lang.UUID;
 import com.ccx.rpc.common.extension.ExtensionLoader;
 import com.ccx.rpc.core.annotation.RpcReference;
 import com.ccx.rpc.core.config.ConfigManager;
-import com.ccx.rpc.core.dto.RpcResult;
-import com.ccx.rpc.core.faulttolerant.FaultTolerantInvoker;
+import com.ccx.rpc.core.consts.MessageFormatConst;
 import com.ccx.rpc.core.dto.RpcRequest;
 import com.ccx.rpc.core.dto.RpcResponse;
+import com.ccx.rpc.core.dto.RpcResult;
+import com.ccx.rpc.core.faulttolerant.FaultTolerantInvoker;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.InvocationHandler;
@@ -32,7 +32,7 @@ public class RpcClientProxy implements InvocationHandler {
      * 获取代理类
      *
      * @param clazz 需要代理的接口类
-     * @param <T>
+     * @param <T>   类型
      * @return 代理类
      */
     @SuppressWarnings("unchecked")
@@ -50,7 +50,6 @@ public class RpcClientProxy implements InvocationHandler {
                 .methodName(method.getName())
                 .params(args)
                 .paramTypes(method.getParameterTypes())
-                .requestId(UUID.fastUUID().toString())
                 .version(rpcReference.version())
                 .build();
         ExtensionLoader<FaultTolerantInvoker> loader = ExtensionLoader.getLoader(FaultTolerantInvoker.class);

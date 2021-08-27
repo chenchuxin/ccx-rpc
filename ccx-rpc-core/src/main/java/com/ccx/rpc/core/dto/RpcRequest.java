@@ -1,10 +1,7 @@
 package com.ccx.rpc.core.dto;
 
 import cn.hutool.core.util.StrUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * RPC 请求实体
@@ -17,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RpcRequest {
-    private String requestId;
     private String interfaceName;
     private String methodName;
     private Object[] params;

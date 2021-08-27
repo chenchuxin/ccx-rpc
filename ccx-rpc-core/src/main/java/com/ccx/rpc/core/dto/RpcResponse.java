@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RpcResponse<T> {
-    private String requestId;
+    private long requestId;
     private Integer code;
     private String message;
     private T data;
 
-    public static <T> RpcResponse<T> success(T data, String requestId) {
+    public static <T> RpcResponse<T> success(T data, long requestId) {
         return RpcResponse.<T>builder()
                 .code(RpcResponseCode.SUCCESS.getCode())
                 .message(RpcResponseCode.SUCCESS.getMessage())

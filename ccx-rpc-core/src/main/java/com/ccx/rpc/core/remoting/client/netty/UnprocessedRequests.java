@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2021/7/31
  */
 public class UnprocessedRequests {
-    private static final Map<String, CompletableFuture<RpcResponse<?>>> FUTURE_MAP = new ConcurrentHashMap<>();
+    private static final Map<Long, CompletableFuture<RpcResponse<?>>> FUTURE_MAP = new ConcurrentHashMap<>();
 
-    public static void put(String requestId, CompletableFuture<RpcResponse<?>> future) {
+    public static void put(long requestId, CompletableFuture<RpcResponse<?>> future) {
         FUTURE_MAP.put(requestId, future);
     }
 

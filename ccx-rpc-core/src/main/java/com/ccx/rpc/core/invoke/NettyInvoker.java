@@ -5,6 +5,7 @@ import com.ccx.rpc.common.url.URL;
 import com.ccx.rpc.core.config.ConfigManager;
 import com.ccx.rpc.core.config.ProtocolConfig;
 import com.ccx.rpc.core.consts.CompressType;
+import com.ccx.rpc.core.consts.MessageFormatConst;
 import com.ccx.rpc.core.consts.MessageType;
 import com.ccx.rpc.core.consts.SerializeType;
 import com.ccx.rpc.core.dto.*;
@@ -34,8 +35,9 @@ public class NettyInvoker extends AbstractInvoker {
         Channel channel = nettyClient.getChannel(socketAddress);
         if (channel.isActive()) {
             CompletableFuture<RpcResponse<?>> resultFuture = new CompletableFuture<>();
-            UnprocessedRequests.put(request.getRequestId(), resultFuture);
+            // 构建 RPC 消息，此处会构建 requestId
             RpcMessage rpcMessage = buildRpcMessage(request);
+            UnprocessedRequests.put(rpcMessage.getRequestId(), resultFuture);
             channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
                     log.info("client send message: [{}]", rpcMessage);
@@ -75,6 +77,7 @@ public class NettyInvoker extends AbstractInvoker {
                 .messageType(MessageType.REQUEST.getValue())
                 .compressTye(compressType.getValue())
                 .serializeType(serializeType.getValue())
+                .requestId(MessageFormatConst.REQUEST_ID.getAndIncrement())
                 .data(request)
                 .build();
     }

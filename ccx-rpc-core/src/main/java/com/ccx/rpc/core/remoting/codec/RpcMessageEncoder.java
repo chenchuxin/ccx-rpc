@@ -56,7 +56,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         // 1B compress（压缩类型）
         out.writeByte(rpcMessage.getCompressTye());
         // 8B requestId（请求的Id）
-        out.writeLong(MessageFormatConst.REQUEST_ID.getAndIncrement());
+        out.writeLong(rpcMessage.getRequestId());
         // 写 body，返回 body 长度
         int bodyLength = writeBody(rpcMessage, out);
 

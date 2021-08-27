@@ -49,7 +49,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcMessage> 
                 }
                 responseMsgBuilder.messageType(MessageType.RESPONSE.getValue());
                 if (ctx.channel().isActive() && ctx.channel().isWritable()) {
-                    RpcResponse<Object> response = RpcResponse.success(result, rpcRequest.getRequestId());
+                    RpcResponse<Object> response = RpcResponse.success(result, requestMsg.getRequestId());
                     responseMsgBuilder.data(response);
                 } else {
                     responseMsgBuilder.data(RpcResponse.fail());
