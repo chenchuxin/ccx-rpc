@@ -26,7 +26,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  *   |                                                                                                             |
  *   |                                        ... ...                                                              |
  *   +-------------------------------------------------------------------------------------------------------------+
- *   2B magic（魔法数）
+ *   2B magic（魔数）
  *   1B version（版本）
  *   4B full length（消息长度）
  *   1B messageType（消息类型）
@@ -43,7 +43,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RpcMessage rpcMessage, ByteBuf out) {
-        // 2B magic code（魔法数）
+        // 2B magic code（魔数）
         out.writeBytes(MessageFormatConst.MAGIC);
         // 1B version（版本）
         out.writeByte(MessageFormatConst.VERSION);
@@ -77,8 +77,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
     private int writeBody(RpcMessage rpcMessage, ByteBuf out) {
         byte messageType = rpcMessage.getMessageType();
         // 如果是 ping、pong 心跳类型的，没有 body，直接返回头部长度
-        if (messageType == MessageType.HEARTBEAT_PING.getValue()
-                || messageType == MessageType.HEARTBEAT_PONG.getValue()) {
+        if (messageType == MessageType.HEARTBEAT.getValue()) {
             return 0;
         }
 

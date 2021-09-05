@@ -23,14 +23,9 @@ public enum MessageType {
     RESPONSE((byte) 2),
 
     /**
-     * 心跳 ping 请求
+     * 心跳
      */
-    HEARTBEAT_PING((byte) 3),
-
-    /**
-     * 心跳 pong 响应
-     */
-    HEARTBEAT_PONG((byte) 4),
+    HEARTBEAT((byte) 3),
     ;
     private final byte value;
 }

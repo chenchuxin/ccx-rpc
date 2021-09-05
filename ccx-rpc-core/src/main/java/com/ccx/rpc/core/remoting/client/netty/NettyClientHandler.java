@@ -25,9 +25,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcMessage> 
     protected void channelRead0(ChannelHandlerContext context, RpcMessage requestMsg) {
         try {
             log.info("client receive msg: [{}]", requestMsg);
-            if (requestMsg.getMessageType() == MessageType.HEARTBEAT_PONG.getValue()) {
-                log.info("heartbeat. {}", requestMsg.getData());
-            } else if (requestMsg.getMessageType() == MessageType.RESPONSE.getValue()) {
+            if (requestMsg.getMessageType() == MessageType.RESPONSE.getValue()) {
                 RpcResponse<?> response = (RpcResponse<?>) requestMsg.getData();
                 UnprocessedRequests.complete(response);
             }
@@ -47,8 +45,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcMessage> 
                 RpcMessage rpcMessage = new RpcMessage();
                 rpcMessage.setSerializeType(SerializeType.PROTOSTUFF.getValue());
                 rpcMessage.setCompressTye(CompressType.DUMMY.getValue());
-                rpcMessage.setMessageType(MessageType.HEARTBEAT_PING.getValue());
-                rpcMessage.setData(MessageFormatConst.PING_DATA);
+                rpcMessage.setMessageType(MessageType.HEARTBEAT.getValue());
                 channel.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
             }
         } else {

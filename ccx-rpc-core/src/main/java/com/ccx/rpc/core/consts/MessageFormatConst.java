@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public interface MessageFormatConst {
 
     /**
-     * 魔法数字
+     * 魔数
      */
     byte[] MAGIC = ByteUtil.numberToBytes((short) 0x52ff);
 

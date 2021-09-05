@@ -78,7 +78,7 @@ public class NettyServerBootstrap {
             // 等待服务端监听端口关闭
             channelFuture.channel().closeFuture().sync();
         } catch (Exception ex) {
-            log.error("shutdown bossGroup and workerGroup");
+            log.error("shutdown bossGroup and workerGroup", ex);
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }

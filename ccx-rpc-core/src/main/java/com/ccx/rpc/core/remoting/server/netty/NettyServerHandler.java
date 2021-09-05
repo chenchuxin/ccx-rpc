@@ -27,34 +27,33 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcMessage> 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage requestMsg) {
         try {
+            // 不理心跳消息
+            if (requestMsg.getMessageType() != MessageType.REQUEST.getValue()) {
+                return;
+            }
             RpcMessage.RpcMessageBuilder responseMsgBuilder = RpcMessage.builder()
                     .serializeType(requestMsg.getSerializeType())
                     .compressTye(requestMsg.getCompressTye())
                     .requestId(requestMsg.getRequestId());
-            if (requestMsg.getMessageType() == MessageType.HEARTBEAT_PING.getValue()) {
-                responseMsgBuilder.messageType(MessageType.HEARTBEAT_PONG.getValue());
-                responseMsgBuilder.data(MessageFormatConst.PONG_DATA);
+            RpcRequest rpcRequest = (RpcRequest) requestMsg.getData();
+            Object result;
+            try {
+                // 根据请求的接口名和版本，获取服务。这个服务是在bean初始化的时候加上的
+                Object service = RpcServiceCache.getService(rpcRequest.getRpcServiceForCache());
+                Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
+                // 开始执行
+                result = method.invoke(service, rpcRequest.getParams());
+                log.info("service:[{}] successful invoke method:[{}]", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
+            } catch (Exception e) {
+                throw new RpcException(e.getMessage(), e);
+            }
+            responseMsgBuilder.messageType(MessageType.RESPONSE.getValue());
+            if (ctx.channel().isActive() && ctx.channel().isWritable()) {
+                RpcResponse<Object> response = RpcResponse.success(result, requestMsg.getRequestId());
+                responseMsgBuilder.data(response);
             } else {
-                RpcRequest rpcRequest = (RpcRequest) requestMsg.getData();
-                Object result;
-                try {
-                    // 根据请求的接口名和版本，获取服务。这个服务是在bean初始化的时候加上的
-                    Object service = RpcServiceCache.getService(rpcRequest.getRpcServiceForCache());
-                    Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
-                    // 开始执行
-                    result = method.invoke(service, rpcRequest.getParams());
-                    log.info("service:[{}] successful invoke method:[{}]", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
-                } catch (Exception e) {
-                    throw new RpcException(e.getMessage(), e);
-                }
-                responseMsgBuilder.messageType(MessageType.RESPONSE.getValue());
-                if (ctx.channel().isActive() && ctx.channel().isWritable()) {
-                    RpcResponse<Object> response = RpcResponse.success(result, requestMsg.getRequestId());
-                    responseMsgBuilder.data(response);
-                } else {
-                    responseMsgBuilder.data(RpcResponse.fail());
-                    log.error("not writable now, message dropped");
-                }
+                responseMsgBuilder.data(RpcResponse.fail());
+                log.error("not writable now, message dropped");
             }
             ctx.writeAndFlush(responseMsgBuilder.build()).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } finally {

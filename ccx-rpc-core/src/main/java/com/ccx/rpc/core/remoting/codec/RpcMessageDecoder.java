@@ -23,15 +23,15 @@ import static com.ccx.rpc.core.consts.MessageFormatConst.*;
  * 自定义协议解码器
  * <p>
  * <pre>
- *   0     1     2       3    4    5    6    7           8        9        10   11   12   13   14   15   16   17   18
- *   +-----+-----+-------+----+----+----+----+-----------+---------+--------+----+----+----+----+----+----+----+---+
- *   |   magic   |version|    full length    |messageType|serialize|compress|              RequestId               |
- *   +-----+-----+-------+----+----+----+----+-----------+----- ---+--------+----+----+----+----+----+----+----+---+
- *   |                                                                                                             |
- *   |                                         body                                                                |
- *   |                                                                                                             |
- *   |                                        ... ...                                                              |
- *   +-------------------------------------------------------------------------------------------------------------+
+ *   0   1   2       3   4   5   6   7           8        9        10   11  12  13  14  15  16  17  18
+ *   +---+---+-------+---+---+---+---+-----------+---------+--------+---+---+---+---+---+---+---+---+
+ *   | magic |version|  full length  |messageType|serialize|compress|           RequestId           |
+ *   +---+---+-------+---+---+---+---+-----------+---------+--------+---+---+---+---+---+---+---+---+
+ *   |                                                                                              |
+ *   |                                         body                                                 |
+ *   |                                                                                              |
+ *   |                                        ... ...                                               |
+ *   +----------------------------------------------------------------------------------------------+
  *   2B magic（魔法数）
  *   1B version（版本）
  *   4B full length（消息长度）
@@ -48,13 +48,18 @@ import static com.ccx.rpc.core.consts.MessageFormatConst.*;
 @Slf4j
 public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     public RpcMessageDecoder() {
-        // initialBytesToStrip: 因为我们还需要检测 魔法数 和 版本号，所以不能截掉
-        super(MAX_FRAME_LENGTH, MAGIC_LENGTH + VERSION_LENGTH, FULL_LENGTH_LENGTH,
-                -(MAGIC_LENGTH + VERSION_LENGTH + FULL_LENGTH_LENGTH), 0);
-    }
-
-    public RpcMessageDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength) {
-        super(maxFrameLength, lengthFieldOffset, lengthFieldLength);
+        super(
+                // 最大的长度，如果超过，会直接丢弃
+                MAX_FRAME_LENGTH,
+                // 描述长度的字段[4B full length（消息长度）]在哪个位置：在 [2B magic（魔数）]、[1B version（版本）] 后面
+                MAGIC_LENGTH + VERSION_LENGTH,
+                // 描述长度的字段[4B full length（消息长度）]本身的长度，也就是 4B 啦
+                FULL_LENGTH_LENGTH,
+                // LengthFieldBasedFrameDecoder 拿到消息长度之后，还会加上 [4B full length（消息长度）] 字段前面的长度
+                // 因为我们的消息长度包含了这部分了，所以需要减回去
+                -(MAGIC_LENGTH + VERSION_LENGTH + FULL_LENGTH_LENGTH),
+                // initialBytesToStrip: 去除哪个位置前面的数据。因为我们还需要检测 魔数 和 版本号，所以不能去除
+                0);
     }
 
     @Override
@@ -94,12 +99,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
                 .messageType(messageType)
                 .build();
 
-        if (messageType == MessageType.HEARTBEAT_PING.getValue()) {
-            rpcMessage.setData(PING_DATA);
-            return rpcMessage;
-        }
-        if (messageType == MessageType.HEARTBEAT_PONG.getValue()) {
-            rpcMessage.setData(PONG_DATA);
+        if (messageType == MessageType.HEARTBEAT.getValue()) {
             return rpcMessage;
         }
 

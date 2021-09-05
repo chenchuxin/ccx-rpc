@@ -94,6 +94,7 @@ public class NettyClient {
      */
     private Channel connect(SocketAddress address) {
         try {
+            log.info("Try to connect server [{}]", address);
             CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
             ChannelFuture connect = bootstrap.connect(address);
             connect.addListener((ChannelFutureListener) future -> {
