@@ -14,9 +14,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RpcResponse<T> {
+    /**
+     * 请求id
+     */
     private long requestId;
+    /**
+     * 响应码
+     */
     private Integer code;
+    /**
+     * 提示消息
+     */
     private String message;
+    /**
+     * 响应数据
+     */
     private T data;
 
     public static <T> RpcResponse<T> success(T data, long requestId) {
